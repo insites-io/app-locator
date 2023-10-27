@@ -1,0 +1,138 @@
+---
+name: locator_enquiry
+resource: modules/insites_locator/enquiry
+resource_owner: anyone
+redirect_to: /thank-you
+spam_protection:
+  recaptcha_v2:
+fields:
+  properties:
+    status:
+    location_uuid:
+    first_name:
+        validation:
+            presence:
+                message: First Name is required
+    last_name:
+        validation:
+            presence:
+                message: Last Name is required
+    email:
+        validation:
+            presence:
+                message: Please provide a valid Email Address
+            email:
+                message: Please provide a valid Email Address
+    phone_country_code:
+    phone_number:
+        validation:
+            presence:
+                message: Mobile Phone is required 
+    message:
+        validation:
+            presence:
+                message: Message is a required field
+email_notifications:
+    - modules/insites_core/insites_external_email
+    - modules/insites_core/insites_internal_email
+callback_actions: >
+    {%- include 'modules/insites_core/insites_admin/insites_create_crm_on_submit',
+        email: form.properties.email,
+        first_name: form.properties.first_name,
+        last_name: form.properties.last_name,
+        mobile_phone_number: form.properties.phone_number,
+        phone_country_code: form.properties.phone_country_code,
+        model_id: form.id -%}
+api_call_notifications:
+    - modules/insites_core/create_crm_activity
+---
+
+{% form 
+    html-id:"locator-enquiry-form" 
+    html-novalidate: true
+    html-onsubmit:"return insLocatorForm.methods.validateForm(event)" %}
+
+    {%- assign props = form.fields.properties -%}
+    <div class="location-details">
+        <input id="status" type="hidden" name="{{ props.status.name }}" value="New" />
+
+        <input id="location_uuid_field" type="hidden" name="{{ props.location_uuid.name }}"
+            value="{{ props.location_uuid.value }}" />
+
+        <input type="hidden" id="phone_number" name="{{ props.phone_number.name }}"
+            value="{{ props.phone_number.value }}" />
+
+        {%- assign country_code = props.phone_country_code.value | default: "61" -%}
+        <input type="hidden" id="country_code" name="{{ props.phone_country_code.name }}"
+            value="{{ country_code }}" />
+        </div>
+
+    <div class="form-wrapper grid-x grid-padding-x">
+
+        <div class="large-6 medium-6 small-12 cell">
+            <ins-input label="First Name*" validate
+                placeholder="First Name"
+                name="{{ props.first_name.name }}"
+                value="{{ props.first_name.value }}"
+                error-message="{{ props.first_name.validation.rules.presence.message }}">
+            </ins-input>
+        </div>
+
+        <div class="large-6 medium-6 small-12 cell">
+            <ins-input label="Last Name*" validate
+                placeholder="Last Name"
+                name="{{ props.last_name.name }}"
+                value="{{ props.last_name.value }}"
+                error-message="{{ props.last_name.validation.rules.presence.message }}">
+            </ins-input>
+        </div>
+
+        <div class="large-6 medium-6 small-12 cell">
+            <ins-input label="Email Address*" validate
+                placeholder="Email Address"
+                field="email"
+                name="{{ props.email.name }}"
+                value="{{ props.email.value }}"
+                error-message="{{ props.email.validation.rules.email.message }}">
+            </ins-input>
+        </div>
+
+        <div class="large-6 medium-6 small-12 cell">
+            <ins-input-tel label="Mobile Phone*" id="phone-number-field" no-areacode
+                country-code="{{ props.phone_country_code.value }}"
+                phonenum-value="{{ props.phone_number.value }}"
+                phonenum-placeholder="Phone Number"
+                error-message="{{ props.phone_number.validation.rules.presence.message }}">
+            </ins-input-tel>
+        </div>
+
+        <div class="large-12 medium-12 small-12 cell">
+            <ins-textarea label="Message*" validate
+                placeholder="Message"
+                name="{{ props.message.name }}"
+                value="{{ props.message.value }}"
+                error-message="{{ props.message.validation.rules.presence.message }}">
+            </ins-textarea>
+        </div>
+
+        
+        <div class="large-6 medium-6 small-12 cell">
+            {%- comment -%}IF your form / instance have recaptcha enabled, uncommment this code{%- endcomment -%}
+            <div id="recaptcha-v2-wrapper" class="large-12 medium-12 small-12 cell">
+                {% spam_protection "recaptcha_v2" %}
+                <div class="ins-form-error">Please prove you are not a robot.</div>
+            </div>
+            <div class="spacer show-for-small-only"></div>
+        </div>
+        <div class="large-6 medium-6 small-12 cell text-right">
+            <ins-button solid
+                id="enquiry-submit-btn" 
+                type="submit" 
+                color="blue" 
+                label="Submit">
+            </ins-button>
+            <div class="spacer xxx-large"></div>
+            <div class="spacer xxx-large"></div>
+        </div>
+    </div>
+{% endform %}

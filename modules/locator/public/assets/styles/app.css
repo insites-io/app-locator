@@ -1,0 +1,655 @@
+/**********
+Locations - INS Locator
+**********/
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    width: 100%;
+    padding: 0;
+    margin: 0;
+}
+
+hr.grey{
+    border-bottom: 1px solid #F2F4F8;
+}
+
+#results-list {
+    overflow: auto;
+    min-height: 350px;
+    height: calc(100vh - 100px);
+    display: none;
+}
+#results-list .result{
+    margin: 0;
+}
+#results-list .placeholder-img {
+    height: 100%;
+    border-radius: var(--ins-border-radius);
+}
+#results-list .result .current-sched{
+    font-weight: 700;
+    color: var(--color-font-head);
+}
+.map-info-card-wrapper ins-button:not(:first-child) button,
+#results-list .result ins-button:not(:first-child) button{
+    margin-left: 16px;
+}
+/*
+.search-locations {
+    position: relative;
+}
+.search-locations ins-button button {
+    padding: 0 10px;
+}
+.search-locations ins-button + ins-button button,
+.search-locations a.ins-button + ins-button button,
+.search-locations ins-button + a.ins-button button {
+    margin-left: 10px;
+}
+*/
+.search-locations ins-input [class*=ins-] label,
+.search-locations [class*=ins-] label, 
+.search-locations label, 
+.search-locations .ins-form-field-wrap .ins-form-label,
+.search-locations .ins-select-label-wrap {
+    font-family: var(--font-family-01);
+    font-weight: 600;
+    font-size: var(--typography-small);
+    line-height: var(--typography-medium);
+    color: var(--color-font-head);
+    margin-bottom: 7px;
+}
+
+.search-field button { display: inline-block; margin-top: 27px; }
+
+.search-field .ins-form-field-wrap,
+.search-field .ins-select-wrap{
+    margin-bottom: 0px;
+}
+
+
+.location-details #location-google-map {
+    width: 100%;
+    height: 300px;
+}
+
+.location-details .locator-gallery img{
+    border-radius: 0px;
+}
+.location-details .locator-faq .ins-accordion-item_header>.inner-head{
+    padding:16px;
+}
+.location-details .locator-faq .ins-accordion-item_header>.inner-head span.heading{
+    line-height:24px;
+}
+
+.locator-search .ins-accordion-item_header {
+    padding-top: 0;
+}
+.locator-search .ins-accordion-item_header > .inner-head {
+    border: none;
+    padding: 0;
+    line-height: 19px;
+    font-weight: 400;
+}
+
+.locator-search .ins-accordion-item .ins-accordion-item_header > .inner-head {
+    color: var(--color-font-sub);
+}
+.locator-search .ins-accordion-item .ins-accordion-item_header > .inner-head > span,
+.locator-search .ins-accordion-item .ins-accordion-item_header > .inner-head > div{
+    vertical-align: middle;
+}
+.locator-search .ins-accordion-item .ins-accordion-item_header > .inner-head .ins-accordion-item_header_caret-wrap{
+    position: relative;
+    display: inline-block;
+    top: 0px;
+    margin-left: 10px;
+}
+.locator-search .ins-accordion-item .ins-accordion-item_header > .inner-head .ins-accordion-item_header_caret-wrap > span{
+    padding: 0px;
+}
+
+.locator-search .ins-accordion-item_header > .inner-head .heading,
+.locator-search .ins-accordion-item_content > .inner-content > .grid-x .cell {
+    font-family: var(--font-family-03);
+    font-size: var(--typography-x-small);
+    line-height: 14px;
+    vertical-align: middle;
+}
+
+.locator-search .ins-accordion-item.open > .ins-accordion-item_header > .inner-head {
+    border: none;
+    background-color: transparent;
+}
+
+.locator-search .ins-accordion-item_header_caret-wrap {
+    right: 0;
+}
+
+.locator-search .ins-accordion-item_header .open-icon, .ins-accordion-item_header .close-icon {
+    padding-left: 0;
+    padding-right: 0;
+}
+
+.locator-search .ins-accordion-item_content .inner-content {
+    border: none;
+    padding: 0;
+    padding-left: 25px;
+    padding-top: 6px;
+    color: var(--color-font-body);
+    font-size: var(--typography-x-small);
+}
+
+.ins-locator-wrapper {
+    position: relative;
+}
+
+#search-submit button {
+    padding: 0 17px;
+}
+
+.ins-locator-wrapper #results-list {
+    list-style: none;
+    margin-left: 0;
+}
+.ins-locator-wrapper #results-list li {
+    /*padding-bottom: 48px;*/
+    /*padding-top: 48px;*/
+    padding: 24px 24px 0px 24px;
+    /*margin-left: 0;*/
+}
+.ins-locator-wrapper #results-list li > div{
+    padding-bottom: 24px;
+    border-bottom: var(--ins-border-style) var(--ins-border-thickness) var(--ins-border-color);
+}
+.ins-locator-wrapper #results-list li:last-child > div{
+    border-bottom: 0px;
+}
+
+.ins-locator-wrapper #results-list li .location-p {
+    padding-left: 26px;
+    position: relative;
+}
+.ins-locator-wrapper #results-list li .location-p .detail-label{
+    font-size: var(--typography-x-small);
+}
+.ins-locator-wrapper #results-list li .location-p .location-icon {
+    position: absolute;
+    left: 0;
+    top: 6px;
+}
+/*
+.ins-locator-wrapper #results-list li .location-p .location-label {
+    margin-left: 0;
+}
+*/
+/*
+.ins-locator-wrapper #results-list li:first-child {
+    padding-top: 0;
+}*/
+
+.ins-locator-wrapper #results-list li:last-child {
+    padding-bottom: 0;
+    border-bottom: none;
+}
+
+.grid-x > .results-img-wrap {
+    height: 150px;
+    width: 212px;
+    margin-bottom: 16px;
+    margin-right: 12px;
+    padding-left: 0;
+}
+
+.grid-x > .results-content-wrap {
+    width: calc(100% - 224px);
+}
+
+.results-img-wrap img {
+    max-height: 200px;
+    width: 100%;
+    height: 100%;
+    border-radius: var(--ins-border-radius);
+    object-fit: cover;
+}
+
+#search-results a {
+    color: var(--color-font-sub);
+}
+
+#search-results a:hover {
+    color: var(--color-main);
+}
+
+@media screen and (min-width: 1023px) and (max-width: 1154px) {
+    #results-map {
+        width: 55%;
+    }
+    #locator-map.hide-results {
+        width: 45%;
+    }
+    .grid-x > .results-img-wrap {
+        width: 100%;
+        padding: 0;
+    }
+}
+@media screen and (max-width: 1023px) {
+    .grid-x > .results-content-wrap {
+        width: 100%;
+    }
+    .grid-x > .results-img-wrap {
+        width: 100%;
+        padding: 0;
+    }
+}
+@media screen and (max-width: 670px) {
+    #results-list {
+        height: auto;
+    }
+    .locator-search .ins-accordion-item_header > .inner-head {
+        max-width: 300px;
+    }
+    .ins-locator-wrapper #results-list li:last-child {
+        padding-bottom: 48px;
+    }
+    
+}
+@media screen and (max-width: 639px) {
+    #results-map ins-button+ins-button button {
+        margin-bottom: 0;
+    }
+
+    .location-details{
+        padding-left: 24px;
+        padding-right: 24px;
+    }
+
+    .location-details .location-content .enquireLocationBtn button{
+        display: block;
+        width: 100%;
+    }
+
+    .search-field #search-submit{
+        display: block;
+    }
+    .search-field #search-submit button{
+        margin-top: 0px;
+        display: block;
+        width: 100%;
+    }
+    .search-locations.search-field > div{
+        padding-left: 24px;
+        padding-right: 24px;
+    } 
+
+    .result .links ins-button{
+        display: block;
+    }
+    .result .links ins-button button{
+        display: block;
+        width: 100%;
+    }
+    .map-info-card-wrapper .links ins-button{
+        display: block;
+    }
+    .map-info-card-wrapper .links ins-button button{
+        display: block;
+        width: 100%;
+    }
+
+    .map-info-card-wrapper ins-button:not(:first-child) button, 
+    #results-list .result ins-button:not(:first-child) button{
+        margin-left: 0px;
+        margin-top: 16px;
+    }
+
+}
+@media screen and (max-width: 340px) {
+    .ins-locator-wrapper #results-list li {
+        margin: 0;
+    }
+}
+
+.btn-container a.ins-button + ins-button:last-child button {
+    margin-bottom: 0;
+}
+
+.ins-locator-wrapper #results-list li .location-name {
+    font-family: var(--font-family-03);
+    font-size: var(--typography-x-large);
+    line-height: 29px;
+    font-weight: 600;
+    color: var(--color-font-head);
+    margin: 0;
+}
+.ins-locator-wrapper #results-list li .location-name:hover {
+    color: var(--color-main);
+}
+
+.ins-locator-wrapper #results-list li p:not(.location-name) {
+    font-family: var(--font-family-03);
+    font-size: var(--typography-small);
+    color: var(--color-font-sub);
+    line-height: 24px;
+}
+
+.ins-locator-wrapper ins-drawer .ins-drawer-wrap .ins-content.left.custom-width {
+    left: -720px;
+}
+
+.ins-locator-wrapper ins-drawer .ins-drawer-header h4 {
+    font-family: var(--font-family-01);
+    font-weight: 700;
+    font-size: 18px;
+    color: var(--color-font-head);
+    line-height: normal;
+}
+
+.ins-locator-wrapper ins-drawer .form-wrapper {
+    padding: 12px;
+}
+
+@media screen and (max-width: 720px) {
+    .ins-locator-wrapper .results-img-wrap {
+        margin-bottom: 16px;
+        width: 100%;
+        height: auto;
+    }
+
+    #results-list .placeholder-img {
+        height: 150px;
+    }
+
+    ins-drawer .ins-drawer-wrap .ins-content.left {
+        width: 100% !important;
+    }
+}
+
+.ins-locator-wrapper ins-drawer .ins-content p [class*="icon-"],
+.map-info-card-wrapper .content-wrapper p [class*="icon-"]
+ {
+    padding-right: 12px;
+    display: inline-block;
+    width: 25px;
+    vertical-align: top;
+    margin-top: 2px;
+    line-height: 17px;
+}
+.ins-locator-wrapper ins-drawer .ins-content p span{
+    display: inline-block;
+    width: 85%;
+}
+
+.map-info-card-wrapper .image-wrapper img{
+    height: 146px;
+    object-fit: cover;
+    object-position: center;
+}
+
+.location-contact-details p [class*="icon-"],
+.location-contact-details a [class*="icon-"] {
+    padding-right: 12px;
+}
+
+.location-contact-details .get-directions {
+    color: var(--color-main);
+}
+
+.location-contact-details a {
+    color: var(--color-font-sub);
+}
+
+.location-contact-details a:hover {
+    color: var(--color-main);
+}
+
+.contact ul li {
+    margin-bottom: 8px;
+}
+
+.contact ul.days li {
+    color: var(--color-font-head);
+}
+
+/* Google Map CSS Overwrites */
+.gm-style .gm-style-iw-c,
+.gm-style-iw-d {
+    padding: 0;
+    max-width: initial !important;
+    overflow: auto !important;
+    max-height: none !important;
+}
+.gm-style-iw.gm-style-iw-c button {
+    top: 0 !important;
+    right: 0 !important;
+}
+.gm-style-iw.gm-style-iw-c button.gm-ui-hover-effect {
+    opacity: 1 !important;
+}
+
+.gm-style-iw.gm-style-iw-c button.gm-ui-hover-effect::before,
+.gm-style-iw.gm-style-iw-c button.gm-ui-hover-effect::after {    
+    content: '';
+    position: absolute;
+    border-radius: 2px;
+    width: 14px;
+    height: 1px;
+    background-color: #e4e6ec;
+    top: 16px;
+    box-shadow: 1px 1px 3px rgba(140, 148, 164, 0.3);
+}
+
+.gm-style-iw.gm-style-iw-c button.gm-ui-hover-effect::before {
+    -webkit-transform: rotate(45deg);
+    -moz-transform: rotate(45deg);
+    transform: rotate(45deg);
+    left: 9px;
+}
+
+.gm-style-iw.gm-style-iw-c button.gm-ui-hover-effect::after {
+    -webkit-transform: rotate(-45deg);
+    -moz-transform: rotate(-45deg);
+    transform: rotate(-45deg);
+    right: 7px;
+}
+
+.gm-style-iw.gm-style-iw-c button.gm-ui-hover-effect img {
+    display: none !important;
+}
+
+/* Map Info Card CSS */
+#ins-locator-map {
+    border-radius: var(--ins-border-radius);
+    width: 100%;
+    min-height: 350px;
+    height: calc(100vh - 100px)
+}
+
+#ins-locator-map .btn-search-results {
+    display: none;
+}
+
+#locator-map.show-results .btn-search-results,
+#locator-map.hide-results .btn-search-results {
+    display: block;
+}
+
+#locator-map .gm-ui-hover-effect>span{
+    background-color: #FFFFFF;
+}
+
+#locator-map .gm-style-iw.gm-style-iw-c button.gm-ui-hover-effect::before, 
+#locator-map .gm-style-iw.gm-style-iw-c button.gm-ui-hover-effect::after{
+    width: 14px;
+    height: 2px;
+    top: 14px;
+    background-color: #FFFFFF;
+    box-shadow: none;
+}
+
+.pac-container:after {
+    background-image: none !important;
+    height: 0px;
+}
+
+.map-info-card-wrapper {
+    position: relative;
+    width: 100%;
+    max-width: 340px;
+}
+.content-wrapper {
+    padding: 16px;
+}
+
+.content-wrapper .location-name {
+    font-family: 'Lato', sans-serif;
+    font-size: 16px;
+    line-height: 20px;
+    font-weight: 700;
+    margin: 0;    
+    color: #2B2B2B;
+}
+
+.content-wrapper p:not(.location-name) {
+    font-family: 'Cabin', sans-serif;
+    font-size: 14px;
+    line-height: 24px;
+    color: #595959;
+    font-weight: 400;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.content-wrapper p .detail-label{
+    font-size: 12px;
+    line-height: 15px;
+    vertical-align: text-top;
+}
+
+#locator-enquiry-form .ins-input-tel-wrap .iti .iti__flag-container .iti__selected-flag {
+    min-height: 39px;
+    padding: 5px 8px;
+}
+
+#locator-enquiry-form .ins-form-error{
+    font-family: var(--font-family-03);
+    font-weight: 400;
+    font-size: var(--typography-x-small);
+    line-height: normal;
+    color: var(--color-error);
+    display: none;
+}
+
+#locator-enquiry-form [has-error="true"] .ins-form-error{
+    display: inline-block;
+}
+
+
+
+.opening-hours .day{
+    color: var(--color-font-head);
+}
+
+.map-info-card-wrapper div.description > p{
+    display: -webkit-box;
+    -webkit-line-clamp: 5;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+
+@media screen and (min-width: 781px) and (max-width: 1023px) {
+    .map-info-card-wrapper,
+    .gm-style img {
+        max-width: 320px;
+    }
+}
+
+@media screen and (max-width: 670px) {
+    #locator-map.show-results .btn-search-results,
+    #locator-map.hide-results .btn-search-results {
+        display: none;
+    }
+    
+}
+
+@media screen and (min-width: 640px) and (max-width: 780px) {
+    .map-info-card-wrapper,
+    .gm-style img {
+        max-width: 265px;
+    }
+}
+
+@media screen and (max-width: 639px) {
+    .map-info-card-wrapper ins-button button {
+        display: inline-block;
+        width: auto;
+        margin-bottom: 0;
+    }
+
+    #ins-locator-map {
+        min-height: 100vh;
+        width: auto;
+    }
+}
+
+@media screen and (max-width: 420px) {
+    .gm-style .gm-style-iw-c {
+        max-width: 280px !important;
+    }
+
+    .gm-style-iw-d .image-wrapper a {
+        display: block;
+        width: 100%;
+        height: 140px;
+        overflow: hidden;
+    }
+
+    .gm-style-iw-d .image-wrapper a img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    .map-info-card-wrapper,
+    .gm-style img {
+        max-width: 280px;
+    }
+
+    .gm-style-iw-d .content-wrapper .location-name {
+        font-size: 18px;
+        line-height: initial;
+    }
+
+    .gm-style-iw.gm-style-iw-c button[title="Close"] {
+        top: 5px !important;
+        right: 5px !important;
+    }
+
+    .gm-style-iw.gm-style-iw-c button[title="Close"] img {
+        width: 16px !important;
+        height: 16px !important;
+    }
+
+    .ins-locator-wrapper .search-field {
+        width: 100%;
+    }
+
+    /* Google Maps Mobile Styles */
+    #ins-locator-map .gmnoprint button {
+        font-size: 14px !important;
+        height: 34px !important;
+    }
+
+    #ins-locator-map button.gm-fullscreen-control {
+        width: 34px !important;
+        height: 34px !important;
+    }
+
+    .gm-control-active>img {
+        height: 14px !important;
+        width: 14px !important;
+    }
+}

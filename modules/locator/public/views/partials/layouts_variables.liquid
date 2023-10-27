@@ -1,0 +1,31 @@
+{%- if context.params.slug2 != blank -%}
+    {%- assign slug = context.params.slug2 -%}
+    {%- graphql location = "modules/locator/get_locations", slug: slug -%}
+
+    {%- if location.items.total_entries == 0 -%}
+        {%- redirect_to "/404" -%}    
+    {%- endif -%}
+
+    {%- assign result = location.items.results[0] -%}
+    {%- assign item = result.properties -%}
+
+    {%- assign id = result.id -%}
+    {%- export id, namespace: "data" -%}
+
+    {%- assign created_at = result.created_at -%}
+    {%- export created_at, namespace: "data" -%}
+
+    {%- assign updated_at = result.updated_at -%}
+    {%- export updated_at, namespace: "data" -%}
+
+    {%- assign gallery_1 = result.gallery_1 -%}
+    {%- export gallery_1, namespace: "data" -%}
+
+    {%- assign location_image = result.location_image -%}
+    {%- export location_image, namespace: "data" -%}
+
+    {%- assign faqs = result.faqs -%}
+    {%- export faqs, namespace: "data" -%}
+    
+    {%- export item, namespace: "data" -%}
+{%- endif -%}

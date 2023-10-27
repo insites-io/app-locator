@@ -1,0 +1,28 @@
+{%- comment -%}
+Location page sitemap
+{%- endcomment -%}
+
+{%- assign parent_slug = "/locations" -%}
+{%- graphql location_list = 'modules/locator/sitemap/get_location_pages' -%}
+
+{%- log location_list, type: "location_list" -%}
+{%- if location_list.items.total_entries > 0 -%}
+
+    {%- comment -%}Loop pagination{%- endcomment -%}
+    {%- for page in (1..location_list.items.total_pages) -%}
+        {%- for item in location_list.items.results -%}
+            {%- if item.slug != blank and item.slug != '' and item.slug != null -%}
+                <url>
+                    <loc>https://{{ context.location.host }}{{ parent_slug }}/{{ item.slug }}</loc>
+                    {%- comment -%}Last data modified: 'YYYY-MM-DD' {%- endcomment -%}
+                    <lastmod>{{ item.updated_at | date: '%Y-%m-%d' }}</lastmod>
+                    <changefreq>{{ item.sitemap_changefreq | downcase | default: 'monthly' }}</changefreq>
+                    <priority>{{ item.sitemap_priority | advanced_format: '%.1f' | default: 1.0 }}</priority>
+                </url> 
+            {%- endif -%}
+        {%- endfor -%}
+    {%- endfor -%}
+
+{%- endif -%}
+
+

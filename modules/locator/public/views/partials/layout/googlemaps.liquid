@@ -1,0 +1,8 @@
+{% graphql data = 'modules/website/trigger_api_call', name: 'modules/client/get_google_maps_api_key' %}
+{% assign key = data.items.response.body | parse_json | dig: 'items','results' | first | dig: 'key' %}
+
+{%- if key != blank -%}
+    <!-- Google Maps API -->
+    <link rel="preload" as="script" href="//maps.googleapis.com/maps/api/js?key={{key}}&libraries=places,geometry&v=3.exp" />
+    <script src="//maps.googleapis.com/maps/api/js?key={{key}}&libraries=places,geometry&v=3.exp"></script>
+{%- endif -%}

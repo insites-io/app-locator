@@ -1,0 +1,94 @@
+query get_locations(
+    $page: Int = 1, 
+    $size: Int = 20,
+    $id: ID,
+    $date_from: String,
+    $date_to: String,
+    $uuid: String
+    $slug: String
+) {
+    items: records(
+        page: $page
+        per_page: $size
+        sort: { properties: { name: "location_name", order: ASC } }
+        filter: {
+            table:{ value: "modules/insites_locator/location" }
+            deleted_at:{ exists: false }
+            id: { value: $id }
+            properties: [
+                { name: "slug", value: $slug },
+                { name: "status", value: "enabled" },
+                { name: "uuid", value: $uuid },
+                { name: "start_date", range: { gte: $date_from }},
+                { name: "end_date", range: { lte: $date_to }}
+            ]
+        }
+    ) {
+        total_entries
+        total_pages
+        per_page
+        current_page
+        results {
+            id
+            created_at
+            updated_at
+            properties
+            location_image: property_upload(name: "location_image") {
+                url
+                file_name
+                extension
+            }
+            pin_icon: property_upload(name: "pin_icon") {
+                url
+                file_name
+                extension
+            }
+            image_1: property_upload(name: "image_1") {
+                url
+                file_name
+                extension
+            }
+            image_2: property_upload(name: "image_2") {
+                url
+                file_name
+                extension
+            }
+            image_3: property_upload(name: "image_3") {
+                url
+                file_name
+                extension
+            }
+            image_4: property_upload(name: "image_4") {
+                url
+                file_name
+                extension
+            }
+            image_5: property_upload(name: "image_5") {
+                url
+                file_name
+                extension
+            }
+            
+            gallery_1: related_records(
+                table: "modules/insites_core/attachment"
+                foreign_property: "uuid"
+                join_on_property: "gallery_1"
+            ) {
+                id
+                uuid: property(name: "uuid")
+                file: property_upload(name: "file") {
+                    file_name
+                    extension
+                    url
+                }
+            }
+            faqs: properties(
+                select: [
+                    { name: "is_faqs_displayed", attribute_type: boolean }
+                    { name: "faqs_section_heading", attribute_type: string }
+                    { name: "faqs_section_subheading", attribute_type: string }
+                ]
+            )
+        }
+    }
+}

@@ -1,0 +1,91 @@
+{%- assign page_title = "Locations | Insites" -%}
+{%- assign meta_title = "Locations | Insites" -%}
+{%- assign meta_description = "Locations | Insites Demo Description" -%}
+{%- assign canonical_url = "" -%}
+{%- export page_title, meta_title, meta_description, canonical_url, namespace: "page_metadata" -%}
+
+<div class="ins-locator-wrapper">
+    {%- comment -%}Locations list view {%- endcomment -%}
+    {% comment %} {%- content_for 'title' -%}{{ context.page.metadata.page_title }}{%- endcontent_for -%}
+    {%- content_for 'meta_description' -%}{{ context.page.metadata.meta_description }}{%- endcontent_for -%} {% endcomment %}
+
+    <section class="news-banner">
+        <div class="blocks-hero-04 wrapper">
+            <div class="grid-container">
+                <div class="spacer"></div>
+                <div class="grid-x">
+                    <div class="large-12 medium-12 small-12 cell">
+                        <div class="title text-align-left" style="font-weight: 700;">
+                            <h1 class="colorWhite">Search Locations</h1>
+                        </div>
+                        <div class="spacer"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    {% graphql data = 'modules/website/trigger_api_call', name: 'modules/client/get_google_maps_api_key' %}
+
+    {%- assign api_key = data.items.response.body | parse_json | dig: 'items','results' | first | dig: 'key' -%}
+    
+    <div class="spacer"></div>
+
+    <div class="locator-search grid-container full">
+        <div class="grid-x grid-padding-x search-locations search-field">
+            <div class="cell large-8 medium-6 small-12">
+                <ins-input label="Search" id="address-search"
+                    {% if api_key == blank %}
+                    readonly placeholder="Google API key not yet configured."
+                    {% else %}
+                    placeholder="Enter your Suburb or Post Code"
+                    error-message="Please enter a valid suburb or post code."
+                    icon="icon-location-arrow" icon-event
+                    {% endif %}>
+                </ins-input>
+                <div class="spacer show-for-small-only"></div>
+            </div>
+            <div class="cell large-auto medium-auto small-12">
+                <ins-select id="search-distance" label="Location within:">
+                    <ins-select-option label="5km" value="5" default></ins-select-option>
+                    <ins-select-option label="10km" value="10"></ins-select-option>
+                    <ins-select-option label="15km" value="15"></ins-select-option>
+                    <ins-select-option label="20km" value="20"></ins-select-option>
+                </ins-select>
+                <div class="spacer show-for-small-only"></div>
+            </div>
+            <div class="cell large-shrink medium-shrink small-12">
+                <ins-button label="Search"
+                    {% if api_key == blank %}
+                    disabled
+                    {% endif %}
+                    id="search-submit"
+                    solid color="blue"
+                    icon="icon-search">
+                </ins-button>
+            </div>
+        </div>
+    </div>
+
+    <div class="spacer"></div>
+    <hr class="grey">
+    <div class="locator-search grid-container full">
+        <div id="search-results" class="grid-x">
+            <div id="results-map" class="large-4 medium-5 small-12 cell small-order-2 medium-order-1">
+                <ul id="results-list"></ul>
+            </div>
+            <div id="locator-map" class="large-12 medium-12 small-12 cell small-order-1 medium-order-2">
+                <div id="ins-locator-map"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Insites Locator UI Dependencies -->
+    {%- include 'modules/locator/app_locator_dependencies' -%}
+    <!-- END Insites Locator UI Dependencies  -->
+
+    {%- comment -%}
+        Location enquiry form drawer
+    {%- endcomment -%}
+    {%- include 'modules/locator/locator_form_drawer' -%}
+</div>

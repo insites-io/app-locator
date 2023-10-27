@@ -1,0 +1,39 @@
+{%- comment -%}
+    Location enquiry form
+{%- endcomment -%}
+
+<ins-drawer no-padding
+    id="locator-form-drawer"
+    label="Enquire Now"
+    backdrop-can-close=true
+    custom-width="720px"
+    position="left">
+    
+    <div id="locator-enquiry-cont">
+        {%- include_form 'modules/locator/locator_enquiry' -%}
+    </div>
+    <div id="locator-enquiry-success" class="hide">
+        <div class="thank-you">
+            <div class="spacer xxxx-large"></div>
+            <div class="grid-x grid-padding-x text-center">
+                <div class="large-12 medium-12 small-12 cell">
+                    <div class="thank-you-img spacer">
+                        <i class="icon-number-of-checks"></i>
+                    </div>
+
+                    <h2 class="heading-2">Thank You!</h2>
+                    <div class="spacer"></div>
+                    <p>Your enquiry has been received.</p>
+                    <div class="spacer"></div>
+                    <ins-button solid
+                        size='normal' label='Close'
+                        onclick='insLocatorForm.methods.closeSuccessPrompt();'></ins-button>
+                </div>
+            </div>
+            
+        </div>
+    </div>
+
+</ins-drawer>
+
+<script src="{{ 'modules/locator/scripts/customLocatorForm.js' | asset_url }}"></script> 

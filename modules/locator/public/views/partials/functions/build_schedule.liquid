@@ -1,0 +1,126 @@
+{%- liquid 
+
+    if item.is_open_on_sunday 
+        if item.sunday_opening_time and item.sunday_closing_time 
+            capture sunday_sched 
+                echo item.sunday_opening_time | date: "%l:%M %p" | append: " -" 
+                echo item.sunday_closing_time  | date: "%l:%M %p"
+            endcapture
+        else
+            assign sunday_sched = "Open"
+        endif
+    else
+        assign sunday_sched = "Closed"
+    endif
+    assign sunday_item = '{}' | parse_json
+    assign sunday_item = sunday_item | add_hash_key: 'time', sunday_sched
+    assign sunday_item = sunday_item | add_hash_key: 'notes', item.sunday_notes
+
+    if item.is_open_on_monday 
+        if item.monday_opening_time and item.monday_closing_time 
+            capture monday_sched
+                echo item.monday_opening_time | date: "%l:%M %p" | append: " -"
+                echo item.monday_closing_time  | date: "%l:%M %p" 
+            endcapture
+        else
+            assign monday_sched = "Open"
+        endif
+    else
+        assign monday_sched = "Closed"
+    endif
+    assign monday_item = '{}' | parse_json
+    assign monday_item = monday_item | add_hash_key: 'time', monday_sched
+    assign monday_item = monday_item | add_hash_key: 'notes', item.monday_notes
+
+    if item.is_open_on_tuesday 
+        if item.tuesday_opening_time and item.tuesday_closing_time 
+            capture tuesday_sched
+                echo item.tuesday_opening_time | date: "%l:%M %p" | append: " -"
+                echo item.tuesday_closing_time  | date: "%l:%M %p"
+            endcapture
+        else
+            assign tuesday_sched = "Open"
+        endif
+    else
+        assign tuesday_sched = "Closed"
+    endif
+    assign tuesday_item = '{}' | parse_json
+    assign tuesday_item = tuesday_item | add_hash_key: 'time', tuesday_sched
+    assign tuesday_item = tuesday_item | add_hash_key: 'notes', item.tuesday_notes
+
+    if item.is_open_on_wednesday 
+        if item.wednesday_opening_time and item.wednesday_closing_time 
+            capture wednesday_sched
+                echo item.wednesday_opening_time | date: "%l:%M %p" | append: " -"
+                echo item.wednesday_closing_time  | date: "%l:%M %p" 
+            endcapture
+        else
+            assign wednesday_sched = "Open"
+        endif    
+    else
+        assign wednesday_sched = "Closed"
+    endif
+    assign wednesday_item = '{}' | parse_json
+    assign wednesday_item = wednesday_item | add_hash_key: 'time', wednesday_sched
+    assign wednesday_item = wednesday_item | add_hash_key: 'notes', item.wednesday_notes
+
+    if item.is_open_on_thursday 
+        if item.thursday_opening_time and item.thursday_closing_time 
+            capture thursday_sched
+                echo item.thursday_opening_time | date: "%l:%M %p" | append: " -"
+                echo item.thursday_closing_time  | date: "%l:%M %p"
+            endcapture
+        else
+            assign thursday_sched = "Open"
+        endif
+    else
+        assign thursday_sched = "Closed"
+    endif
+    assign thursday_item = '{}' | parse_json
+    assign thursday_item = thursday_item | add_hash_key: 'time', thursday_sched
+    assign thursday_item = thursday_item | add_hash_key: 'notes', item.thursday_notes
+
+    if item.is_open_on_friday 
+        if item.friday_opening_time and item.friday_closing_time 
+            capture friday_sched
+                echo item.friday_opening_time | date: "%l:%M %p" | append: " -"
+                echo item.friday_closing_time  | date: "%l:%M %p"
+            endcapture
+        else
+            assign friday_sched = item.friday_notes | default: "Open"
+        endif
+    else
+        assign friday_sched = item.friday_notes | default: "Closed"
+    endif
+    assign friday_item = '{}' | parse_json
+    assign friday_item = friday_item | add_hash_key: 'time', friday_sched
+    assign friday_item = friday_item | add_hash_key: 'notes', item.friday_notes
+
+    if item.is_open_on_saturday
+        if item.saturday_opening_time and item.saturday_closing_time 
+            capture saturday_sched
+                echo item.saturday_opening_time | date: "%l:%M %p" | append: " -"
+                echo item.saturday_closing_time  | date: "%l:%M %p"
+            endcapture
+        else
+            assign saturday_sched = item.saturday_notes | default: "Open"
+        endif
+    else
+        assign saturday_sched = item.saturday_notes | default: "Closed"
+    endif
+    assign saturday_item = '{}' | parse_json
+    assign saturday_item = saturday_item | add_hash_key: 'time', saturday_sched
+    assign saturday_item = saturday_item | add_hash_key: 'notes', item.saturday_notes
+
+    assign schedule = '{}' | parse_json
+    assign schedule = schedule | add_hash_key: 'sunday', sunday_item
+    assign schedule = schedule | add_hash_key: 'monday', monday_item
+    assign schedule = schedule | add_hash_key: 'tuesday', tuesday_item
+    assign schedule = schedule | add_hash_key: 'wednesday', wednesday_item
+    assign schedule = schedule | add_hash_key: 'thursday', thursday_item
+    assign schedule = schedule | add_hash_key: 'friday', friday_item
+    assign schedule = schedule | add_hash_key: 'saturday', saturday_item
+
+    return schedule
+
+-%}

@@ -1,0 +1,38 @@
+---
+slug: locations
+layout: modules/locator/locator_template
+# enable_profiler: true
+searchable: true
+max_deep_level: 2
+metadata: {
+  "og:url": null,
+  "schema": null,
+  "status": "published",
+  "og:type": null,
+  "og:image": null,
+  "og:title": null,
+  "page_name": "Locations",
+  "page_type": "content",
+  "meta_title": null,
+  "page_title": "Locations",
+  "database_id": "1278420",
+  "description": null,
+  "redirect_to": null,
+  "og:site_name": null,
+  "canonical_url": null,
+  "sitemap_order": "",
+  "og:description": null,
+  "sitemap_enabled": false,
+  "sitemap_priority": "",
+  "details_layout_id": null,
+  "sitemap_changefreq": "monthly",
+  "search_engine_visibility": false
+}
+---
+{%- include 'modules/locator/layouts_variables' -%}
+
+{%- if context.params.slug2 != blank -%}
+    {%- include "modules/locator/details" -%}
+{%- else -%}
+    {%- include "modules/locator/list" -%}
+{%- endif -%}

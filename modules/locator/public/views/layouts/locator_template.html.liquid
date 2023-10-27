@@ -1,0 +1,86 @@
+{%- comment -%}
+By adding the global content to the top of the layout
+It can be accessed in the includes without calling the GraphQL again
+It IS NOT accessable in {{content_for_layout}} which includes the specific page
+{%- endcomment -%}
+{%- include "modules/insites_cms/globals" -%}
+{%- assign global = context.exports.global -%}
+
+{%- comment -%} Used by the fragment cache in the layout {%- endcomment -%}
+{%- include "modules/website/cache/layout_fragment_cache_key" -%}
+
+{%- comment -%}
+INS Locator template
+- uses the main template 'dynamic_cms_1col' + 'includes locator assets / dependencies'
+{%- endcomment -%}
+<!doctype html>
+<html lang="en">
+    {%- if context.environment == "staging" -%}
+    <!-- start layout: locator_template  -->
+    {%- endif -%}
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1.0, minimum-scale=1.0, maximum-scale=5.0, viewport-fit=cover">
+        <meta content="authenticity_token" name="csrf-param">
+        <meta content="{{ context.authenticity_token }}" name="csrf-token">
+        <meta http-equiv="X-UA-Compatible" content="ie=edge">
+        {%- comment -%}
+        We try to limit assets that are part of the head / technical head to 
+        minimize page size & improve page performance.
+
+        Assets like 'Google Map API', should only be referenced as needed.
+        - Managed on the 'page / layout' level
+        {%- endcomment -%}
+
+        <!-- 
+            {{ context.device.device_type }}
+        -->
+        
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1.0, minimum-scale=1.0, maximum-scale=5.0, viewport-fit=cover">
+        <meta content="authenticity_token" name="csrf-param">
+        <meta content="{{ context.authenticity_token }}" name="csrf-token">
+        <meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+        {%- comment -%} SEO Metadata generator partial in Insites Locator module {%- endcomment -%}
+        {%- include 'modules/insites_locator/seo', type: 'location' -%}
+        
+        {%- include 'modules/insites_cms/globals' -%}
+
+        {%- if global.company_icon.original -%}
+            <link rel="shortcut icon" type="image/png" href="{{ global.company_icon.original }}"/>
+        {%- endif -%}
+        
+        {%- capture head_key -%} {{ context.exports.layout_cache_key.cache_key | append: "-head" }} {%- endcapture -%}
+        {%- cache head_key -%}
+        {%- include 'modules/website/layout/technical_head' -%}
+                
+        {%- include 'modules/website/layout/pixel_tracking' -%}
+        {%- include 'modules/locator/layout/googlemaps' -%}
+        {%- endcache -%}
+
+    </head>
+    <body>
+
+        {%- if context.current_user and context.modules.ins_template_ecommerce.name != blank -%}
+            {% include 'modules/website/layout/header' %}
+        {%- else -%}
+            {%- capture header_key -%} {{ context.exports.layout_cache_key.cache_key | append: "-header" }} {%- endcapture -%}
+            {%- cache header_key -%}
+                {% include 'modules/website/layout/header' %}
+            {%- endcache -%}
+        {%- endif -%}
+
+        {{ content_for_layout }}
+
+        {%- capture foot_key -%} {{ context.exports.layout_cache_key.cache_key | append: "-footer_section"}} {%- endcapture -%}
+        {%- cache foot_key -%}
+            {% include 'modules/website/layout/footer' %}
+            {% include 'modules/website/layout/foot' %}
+        {%- endcache -%}
+    </body>
+
+    {%- if context.environment == "staging" -%}
+    <!-- end layout: locator_template  -->
+    {%- endif -%}
+</html>
