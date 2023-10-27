@@ -38,13 +38,11 @@ const searchSubmitBtn = document.getElementById('search-submit');
 const addressFieldEl = document.getElementById('address-search');
 const searchResults = document.getElementById('search-results');
 // const searchResultsBtn = document.getElementById('search-results-btn');
-const resultsList = document.getElementById('results-list');
 const locatorMap = document.getElementById('locator-map');
 // Add initMap initializations, functions, binding, etc..
 function initMapBinding() {
     insitesLocator.events.initEventListeners();
 }
-
 
 /*** Google Map API Initialization ***/
 function initMap() {
@@ -54,7 +52,6 @@ function initMap() {
     if(mapContainer){
         map = new google.maps.Map(mapContainer, mapOptions);
         const searchResultsEl = document.createElement("div");
-        toggleSearchResults(searchResultsEl, map);
         map.controls[google.maps.ControlPosition.TOP_LEFT].push(searchResultsEl);
         geocoder = new google.maps.Geocoder();
         addressFieldEl.addEventListener('didLoad', () => {
@@ -69,37 +66,6 @@ function initMap() {
         //-- Add additional scripts todo after initMap()
         initMapBinding();
     }
-}
-
-
-/*** Create custom button in Google Map ***/
-function toggleSearchResults(map) {
-    const btnSearchEl = document.createElement("div");
-    btnSearchEl.classList.add('btn-search-results');
-    btnSearchEl.style.backgroundColor = "#fff";
-    btnSearchEl.style.border = "none";
-    btnSearchEl.style.borderRadius = "2px";
-    btnSearchEl.style.boxShadow = "rgb(0 0 0 / 30%) 0px 1px 4px -1px";
-    btnSearchEl.style.cursor = "pointer";
-    btnSearchEl.style.marginLeft = "24px";
-    btnSearchEl.style.marginTop = "24px";
-    btnSearchEl.style.marginBottom = "0px";
-    btnSearchEl.style.textAlign = "center";
-    map.appendChild(btnSearchEl);
-  
-    const textSearchEl = document.createElement("div");
-    textSearchEl.style.color = "rgb(102, 102, 102)";
-    textSearchEl.style.lineHeight = "15px";
-    textSearchEl.style.fontSize = "12px";
-    textSearchEl.style.fontWeight = "700";
-    textSearchEl.style.fontFamily = "'Cabin', sans-serif";
-    textSearchEl.style.padding = "14px";
-    textSearchEl.innerHTML = '<span class="icon-chevron-right"></span><span style="margin-left:6px;" class="text-cont">Hide List</span>';
-    btnSearchEl.appendChild(textSearchEl);
-  
-    btnSearchEl.addEventListener("click", () => {
-        toggleSearchResultsList();
-    });
 }
 
 
@@ -153,7 +119,7 @@ async function searchLocations(keyword) {
 }
 
 /*** Loop through results to create map markers & info cards ***/
- function updateMarkers(list) {
+function updateMarkers(list) {
     insLocatorForm.data.pushArrayData('locations', list);
 
     markers = [];
@@ -177,7 +143,6 @@ async function searchLocations(keyword) {
     window.location.hash = "";
     window.location.hash = "search-results";
 
-    toggleSearchResultsList(true); // open drawer
     map.streetViewControl = false;
     map.setZoom(14);
 
@@ -192,6 +157,7 @@ async function searchLocations(keyword) {
 
 /*** List search results to drawer ***/
 function listLocation(location, index) {
+    resultsList.style.display = "block";
     // Google = [Lat, Log], pOS = [Long, Lat]
     let lat = location.properties.geojson.coordinates[1];
     let long = location.properties.geojson.coordinates[0];
@@ -201,48 +167,47 @@ function listLocation(location, index) {
 
     let item = document.createElement('li');
         item.innerHTML = `
-            <div class='result'>
-                <div class='results-content-wrap'>
-                    ${link ? `<a href='${link}' target='_blank'>` : ''}
-                        <h3><span class='location-name'>${location_name}</span></h3>
-                    ${link ? `</a>` : ''}
-                    <div class='spacer small'></div>
-                    <div class="short-description">
-                        ${location.properties.short_description}
-                    </div>
-                    <div class='spacer small'></div>
-                    <p class="location-p">
-                        <i class="icon-map location-icon"></i>
-                        <span class="detail-label">${constructAddress(location.properties)}</span>
-                    </p>
-                    <div class='spacer x-small'></div>
-                    <div>
-                        ${constructSchedule(location.properties)}
-                    </div>
-                    <div class='spacer x-small'></div>
-                    <p class="location-p">
-                        <i class="icon-location-arrow location-icon"></i>
-                        <span class="detail-label">${distance} KM</span>
-                    </p>
-                    <div class='spacer small'></div>
-                    <div class="links">
-                        <ins-button outlined 
-                            label='Enquire'
-                            size='normal'
-                            class='enquireLocationBtn'
-                            id='enquire-${location.id}' 
-                            data-id='${location.id}'
-                            data-location_name="${location.properties.location_name}"
-                            onclick="insLocatorForm.methods.showEnquiryForm('${location.properties.uuid}', \`${location.properties.location_name}\`)">
-                        </ins-button>
-                        ${link ? `<ins-button solid
-                            size='normal' label='View Location'
-                            onclick='window.open("${link}", "_blank");'>
-                        </ins-button>`  : '' }
-                    </div>
+            <div class='results-content-wrap'>
+                ${link ? `<a href='${link}' target='_blank'>` : ''}
+                    <h3><span class='location-name'>${location_name}</span></h3>
+                ${link ? `</a>` : ''}
+                <div class='spacer small'></div>
+                <div class="short-description">
+                    ${location.properties.short_description}
+                </div>
+                <div class='spacer small'></div>
+                <p class="location-p">
+                    <i class="icon-map location-icon"></i>
+                    <span class="detail-label">${constructAddress(location.properties)}</span>
+                </p>
+                <div class='spacer x-small'></div>
+                <div>
+                    ${constructSchedule(location.properties)}
+                </div>
+                <div class='spacer x-small'></div>
+                <p class="location-p">
+                    <i class="icon-location-arrow location-icon"></i>
+                    <span class="detail-label">${distance} KM</span>
+                </p>
+                <div class='spacer small'></div>
+                <div class="links">
+                    <ins-button outlined 
+                        label='Enquire'
+                        size='normal'
+                        class='enquireLocationBtn'
+                        id='enquire-${location.id}' 
+                        data-id='${location.id}'
+                        data-location_name="${location.properties.location_name}"
+                        onclick="insLocatorForm.methods.showEnquiryForm('${location.properties.uuid}', \`${location.properties.location_name}\`)">
+                    </ins-button>
+                    ${link ? `<ins-button solid
+                        size='normal' label='View Location'
+                        onclick='window.open("${link}", "_blank");'>
+                    </ins-button>`  : '' }
                 </div>
             </div>`;
     resultsList.appendChild(item);
+    resultsLoader.style.display = "none";
 }
 
 
@@ -253,41 +218,6 @@ function listLocation(location, index) {
  */
 function directionsBtnEventHandler(index, element) {
     google.maps.event.trigger(markers[index], 'click');
-}
-
-/***
- Show and hide search results 
-  - Open search results, Update show and hide button icon for results when toggling
-***/
-function toggleSearchResultsList(value) {
-    let btn = locatorMap.querySelector('.btn-search-results span');
-    let innerBtn = locatorMap.querySelectorAll('.btn-search-results span');
-    if (value === undefined) value = locatorMap.classList.contains('show-results');
-    if (!value) {
-        innerBtn[0].classList.remove('icon-chevron-left');
-        innerBtn[0].classList.add('icon-chevron-right');
-        innerBtn[0].title = "Show Search Results";
-        innerBtn[1].innerHTML = "Show List";
-        locatorMap.classList.remove('hide-results');
-        locatorMap.classList.add('show-results');
-        locatorMap.classList.remove("large-8");
-        locatorMap.classList.remove("medium-7");
-        locatorMap.classList.add("large-12");
-        locatorMap.classList.add("medium-12");
-        resultsList.style.display = "none";
-    } else {
-        innerBtn[0].classList.remove('icon-chevron-right');
-        innerBtn[0].classList.add('icon-chevron-left');
-        innerBtn[0].title = "Hide Search Results";
-        innerBtn[1].innerHTML = "Hide List";
-        locatorMap.classList.remove('show-results');
-        locatorMap.classList.add('hide-results');
-        locatorMap.classList.remove("large-12");
-        locatorMap.classList.remove("medium-12");
-        locatorMap.classList.add("large-8");
-        locatorMap.classList.add("medium-7");
-        resultsList.style.display = "block";
-    }
 }
 
 /***
@@ -518,6 +448,7 @@ function noSearchResultsHandler(keyword) {
     locatorMap.classList.add("large-12");
     locatorMap.classList.add("medium-12");
     resultsList.style.display = "none";
+    resultsLoader.style.display = "none";
 
     new MarkerClusterer(map, [], markerImages);
     App.events.swal('OK', `No search results for ${keyword}.`, "");

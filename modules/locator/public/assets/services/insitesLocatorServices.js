@@ -1,3 +1,6 @@
+const resultsLoader = document.getElementById('results-loader');
+const resultsList = document.getElementById('results-list');
+
 var InsLocatorServices = (function(){
     const 
         apiUrl = "",
@@ -38,6 +41,8 @@ var InsLocatorServices = (function(){
 
     return {
         searchLocations: async function(filter) {
+            resultsList.style.display = "none";
+            resultsLoader.style.display = "block";
             let url = `/api/locator/locations?page=${filter.page}&size=${filter.size}`;
                 url+= `&lat=${filter.location.lat}&lng=${filter.location.lng}`;
                 url += `&distance=${filter.distance}`;

@@ -3,12 +3,12 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.19.0/axios.min.js"></script>
 
 {%- if context.environment == "staging" -%}
-    <link rel="preload" as="style" href="{{ 'modules/locator/styles/app.css' | asset_url }}" /> 
-    <link rel="stylesheet" href="{{ 'modules/locator/styles/app.css' | asset_url }}" /> 
+    <link rel="preload" as="style" href="{{ 'modules/locator/styles/locator_app.css' | asset_url }}" /> 
+    <link rel="stylesheet" href="{{ 'modules/locator/styles/locator_app.css' | asset_url }}" /> 
 {%- else -%}
     {%- comment -%} Minified version will be used in the production environment {%- endcomment -%}
-    <link rel="preload" as="style" href="{{ 'modules/locator/styles/app.min.css' | asset_url }}" /> 
-    <link rel="stylesheet" href="{{ 'modules/locator/styles/app.min.css' | asset_url }}" /> 
+    <link rel="preload" as="style" href="{{ 'modules/locator/styles/locator_app.min.css' | asset_url }}" /> 
+    <link rel="stylesheet" href="{{ 'modules/locator/styles/locator_app.min.css' | asset_url }}" /> 
 {%- endif -%}
 
 
