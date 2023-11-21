@@ -1,3 +1,7 @@
+{% comment %} Fonts {% endcomment %}
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cabin:wght@300;400;700&display=swap" rel="stylesheet">
 
 <link rel="preload" as="script" href="https://cdnjs.cloudflare.com/ajax/libs/axios/0.19.0/axios.min.js" />
 <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.19.0/axios.min.js"></script>
@@ -20,9 +24,17 @@
 {%- endcomment -%}
 
 <script src="https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/markerclusterer.js"></script>
-<script src="{{ 'modules/locator/services/insitesLocatorServices.js' | asset_url }}"></script>
-<script src="{{ 'modules/locator/scripts/customLocatorUI.js' | asset_url }}"></script>
-<script src="{{ 'modules/locator/scripts/customLocatorMap.js' | asset_url }}"></script> 
+
+{%- if context.environment == "staging" -%}
+    <script src="{{ 'modules/locator/services/insitesLocatorServices.js' | asset_url }}"></script>
+    <script src="{{ 'modules/locator/scripts/customLocatorUI.js' | asset_url }}"></script>
+    <script src="{{ 'modules/locator/scripts/customLocatorMap.js' | asset_url }}"></script> 
+{%- else -%}
+    {%- comment -%} Minified version will be used in the production environment {%- endcomment -%}
+    <script src="{{ 'modules/locator/services/insitesLocatorServices.min.js' | asset_url }}"></script>
+    <script src="{{ 'modules/locator/scripts/customLocatorUI.min.js' | asset_url }}"></script>
+    <script src="{{ 'modules/locator/scripts/customLocatorMap.min.js' | asset_url }}"></script> 
+{%- endif -%}
 
 
 

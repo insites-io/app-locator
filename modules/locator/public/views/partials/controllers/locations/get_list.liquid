@@ -4,6 +4,10 @@
 {%- assign page = query_params.page | default: 1 | plus: 0 -%}
 {%- assign size = query_params.size | default: 20 | plus: 0 -%}
 
+{% comment %} Get the "First" System Field UUID{% endcomment %}
+{%- include "modules/locator/utilities/get_system_field_names" -%}
+{%- assign system_field = context.exports.system_fields | dig: "items" | dig: "results" | dig: "properties" | first | dig: "metadata" |  dig: "system_fields" | first -%}
+
 {%- if query_params.lng and query_params.lat -%}
     {%- parse_json location -%}
         {
@@ -20,7 +24,8 @@
         id: id,
         date_from: date_from,
         date_to: date_to,
-        external_id: external_id -%}
+        external_id: external_id,
+        system_field_uuid: system_field.uuid -%}
 {%- else -%}
     {%- graphql data = "modules/locator/locations/get_locations", 
         page: page,
@@ -28,12 +33,32 @@
         id: id,
         date_from: date_from,
         date_to: date_to,
-        external_id: external_id -%}
+        external_id: external_id,
+        system_field_uuid: system_field.uuid -%}
 {%- endif -%}
 
 {% parse_json response %}
     {{ data | fetch: "items" }}
 {% endparse_json %}
+
+{% parse_json locations %}
+    {{ response | dig: "results" }}
+{% endparse_json %}
+
+{% for item in locations %}
+    {% comment %} Add System Field Name {% endcomment %}
+    {% assign item = item | add_hash_key: "system_field_name", system_field.system_field_name %}
+{% endfor %}
+{%- assign _results = '{}' | parse_json -%}
+{%- assign _items = '{}' | parse_json -%}
+{%- assign _locations = '{}' | parse_json -%}
+
+{%- assign _results = data -%}
+{%- assign delete_results = _results.items | hash_delete_key: "results" -%}
+{%- assign _items = _results.items -%}
+{%- assign _items = _items | add_hash_key: "results", locations -%}
+{%- assign _locations = _locations | add_hash_key: "items", _items -%}
+
 
 {%- if response != blank -%} 
     {%- assign status = 200 -%}

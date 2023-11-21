@@ -5,7 +5,8 @@ query get_locations(
     $date_from: String,
     $date_to: String,
     $uuid: String
-    $slug: String
+    $slug: String,
+    $system_field_uuid: String
 ) {
     items: records(
         page: $page
@@ -33,6 +34,14 @@ query get_locations(
             created_at
             updated_at
             properties
+            category: related_record(
+                table: "modules/insites_locator/category",
+                foreign_property: "uuid",
+                join_on_property: "category_uuid"
+            ){
+                name: property(name: "category_name")
+                slug: property(name: "slug")
+            }
             location_image: property_upload(name: "location_image") {
                 url
                 file_name
@@ -68,19 +77,18 @@ query get_locations(
                 file_name
                 extension
             }
-            
-            gallery_1: related_records(
-                table: "modules/insites_core/attachment"
+            system_fields: related_records(
+                table: "modules/insites_locator/location_system_field"
                 foreign_property: "uuid"
-                join_on_property: "gallery_1"
+                join_on_property: "system_field_uuids"
+                filter: {
+                    properties: [
+                        { name: "system_field", value: $system_field_uuid }
+                    ]
+                }
             ) {
                 id
-                uuid: property(name: "uuid")
-                file: property_upload(name: "file") {
-                    file_name
-                    extension
-                    url
-                }
+                properties
             }
             faqs: properties(
                 select: [

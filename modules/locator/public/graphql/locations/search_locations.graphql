@@ -6,7 +6,8 @@ query search_locations(
     $date_to: String,
     $uuid: String,
     $distance: Float = 10.0,
-    $point: GeometryJSON
+    $point: GeometryJSON,
+    $system_field_uuid: String
 ) {
     items: records(
         page: $page
@@ -82,6 +83,19 @@ query search_locations(
                 url
                 file_name
                 extension
+            }
+            system_fields: related_records(
+                table: "modules/insites_locator/location_system_field"
+                foreign_property: "uuid"
+                join_on_property: "system_field_uuids"
+                filter: {
+                    properties: [
+                        { name: "system_field", value: $system_field_uuid }
+                    ]
+                }
+            ) {
+                id
+                properties
             }
         }
     }

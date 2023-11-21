@@ -1,0 +1,20 @@
+{%- graphql results = 'modules/insites_locator/system_fields/get_system_fields' -%}
+
+{%- assign properties = '[]' | parse_json -%}
+
+{%- for item in results.admin_table_update.properties -%}
+    {%- if item.name == 'system_field' -%}
+        {%- assign properties = properties | add_to_array: item -%}
+    {%- endif -%}
+{%- endfor -%}
+
+{%- assign system_fields = '{}' | parse_json -%}
+{%- assign _items = '{}' | parse_json -%}
+{%- assign _items_results = '{}' | parse_json -%}
+
+{%- assign _items_results = _items_results | add_hash_key: 'properties', properties -%}
+{%- assign _items = _items | add_hash_key: "results", _items_results -%}
+
+{%- assign system_fields = system_fields | add_hash_key: 'items', _items -%}
+
+{% export system_fields %}

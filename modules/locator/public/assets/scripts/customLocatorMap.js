@@ -127,12 +127,20 @@ function updateMarkers(list) {
     
     for (var i = 0; i < list.length; i++) {
         var infowindow = new google.maps.InfoWindow();
+        
+        var icon = {
+            url: `${Object.keys(list[i].properties.pin_icon).length ? list[i].pin_icon.url : ''}`, // url
+            scaledSize: new google.maps.Size(37, 37), // size
+        };
+
         var marker = new google.maps.Marker({
             position: {
                 lng: list[i].properties.geojson.coordinates[0],
                 lat: list[i].properties.geojson.coordinates[1]
             }
         });
+        if(Object.keys(list[i].properties.pin_icon).length) marker.setIcon(icon);
+
         listLocation(list[i], i);
         makeInfoWindowEvent(map, infowindow, list[i], marker);
         markers.push(marker); // Set Cluster Markers, OR ...
@@ -167,49 +175,104 @@ function listLocation(location, index) {
 
     let item = document.createElement('li');
         item.innerHTML = `
-            <div class='results-content-wrap'>
-                ${link ? `<a href='${link}' target='_blank'>` : ''}
-                    <h3><span class='location-name'>${location_name}</span></h3>
-                ${link ? `</a>` : ''}
-                <div class='spacer small'></div>
-                <div class="short-description">
-                    ${location.properties.short_description}
-                </div>
-                <div class='spacer small'></div>
-                <p class="location-p">
-                    <i class="icon-map location-icon"></i>
-                    <span class="detail-label">${constructAddress(location.properties)}</span>
-                </p>
-                <div class='spacer x-small'></div>
-                <div>
-                    ${constructSchedule(location.properties)}
-                </div>
-                <div class='spacer x-small'></div>
-                <p class="location-p">
-                    <i class="icon-location-arrow location-icon"></i>
-                    <span class="detail-label">${distance} KM</span>
-                </p>
-                <div class='spacer small'></div>
-                <div class="links">
-                    <ins-button outlined 
-                        label='Enquire'
-                        size='normal'
-                        class='enquireLocationBtn'
-                        id='enquire-${location.id}' 
-                        data-id='${location.id}'
-                        data-location_name="${location.properties.location_name}"
-                        onclick="insLocatorForm.methods.showEnquiryForm('${location.properties.uuid}', \`${location.properties.location_name}\`)">
-                    </ins-button>
-                    ${link ? `<ins-button solid
-                        size='normal' label='View Location'
-                        onclick='window.open("${link}", "_blank");'>
-                    </ins-button>`  : '' }
+            <div class='location-content-wrapper'>
+                <img class="location-image" width="80" height="80" src="${location.location_image.url 
+                    ? location.location_image.url 
+                    : `${domain}assets/modules/locator/images/default.png`}"
+                    alt="${location.properties.location_name}"
+                    title="${location.properties.location_name}" />
+                <div class='location-details'>
+                    <div class="upper-row">
+                        <div>
+                            ${link ? `<a href='${link}' target='_blank'>` : ''}
+                                <h3><span class='location-name'>${location_name}</span></h3>
+                            ${link ? `</a>` : ''}
+                            <div class="spacer xx-small"></div>
+                            <p class="location-sub-texts">
+                                ${constructAddress(location.properties)}
+                            </p>
+                        </div>
+                        <div class='buttons'>
+                            <ins-button outlined 
+                                label='Enquire'
+                                size='normal'
+                                icon='icon-email-1'
+                                id='enquire-${location.id}' 
+                                data-id='${location.id}'
+                                data-location_name="${location.properties.location_name}"
+                                onclick="insLocatorForm.methods.showEnquiryForm('${location.properties.uuid}', \`${location.properties.location_name}\`)">
+                            </ins-button>
+                            ${link ? `<ins-button solid
+                                icon='icon-eye'
+                                size='normal' label='More Information'
+                                onclick='window.open("${link}", "_blank");'>
+                            </ins-button>`  : '' }
+                        </div>
+                    </div>
+                    <div class="lower-row">
+                        ${ location.properties.phone_number || location.properties.email ?
+                            `<div class="sub-details">
+                                <p class="location-sub-texts bolder">
+                                    Contact Details
+                                </p>
+                                ${ location.properties.phone_number ?
+                                        `<p class="location-sub-texts">
+                                            (${location.properties.phone_country_code}) ${location.properties.phone_number}
+                                        </p>` : ''}
+                                ${ location.properties.email ?
+                                    `<p class="location-sub-texts">
+                                        ${location.properties.email}
+                                    </p>` : ''}
+                            </div>` : ''}
+                        ${ location.system_fields.length ?
+                            `<div class="sub-details">
+                                <p class="location-sub-texts bolder">
+                                    ${location.system_field_name}
+                                </p>
+                                <p class="location-sub-texts">
+                                    ${getFields(location.system_fields)}
+                                </p>
+                        </div>` : ''}
+                        <div class="sub-details">
+                            <p class="location-sub-texts bolder">
+                                Store Availability
+                            </p>
+                            ${constructSchedule(location.properties)}
+                        </div>
+                    </div>
+                    <div class="grid-view-buttons">
+                        <div class='buttons'>
+                            <ins-button outlined 
+                                label='Enquire'
+                                size='normal'
+                                icon='icon-email-1'
+                                id='enquire-${location.id}' 
+                                data-id='${location.id}'
+                                data-location_name="${location.properties.location_name}"
+                                onclick="insLocatorForm.methods.showEnquiryForm('${location.properties.uuid}', \`${location.properties.location_name}\`)">
+                            </ins-button>
+                            ${link ? `<ins-button solid
+                                icon='icon-eye'
+                                size='normal' label='More Information'
+                                onclick='window.open("${link}", "_blank");'>
+                            </ins-button>`  : '' }
+                        </div>
+                    </div>
                 </div>
             </div>`;
     resultsList.appendChild(item);
     resultsLoader.style.display = "none";
 }
 
+/***
+ * Return System Field Values
+ ***/
+function getFields(fields) {
+    let system_fields = "";
+    fields.forEach((field, index) => system_fields += `${(fields.length > 1 && index === fields.length - 1) ? ' and ' : ''}${field.properties.value}${(index === fields.length - 1 || index === fields.length - 2) ? '' : ', '}`);
+
+    return system_fields;
+}
 
 /**
  * Function when 'See on Map' is clicked.
@@ -252,62 +315,40 @@ function constructSchedule(data) {
     let daysUsed = ['sunday', 'monday','tuesday','wednesday','thursday','friday','saturday'];
     let getDay = dateNow.getDay();
     let currentDay = daysUsed[getDay];
-    let accordionHeading = constructAccordionHeading(data[daysUsed[getDay]+"_enabled"], data[daysUsed[getDay]+"_open"], data[daysUsed[getDay]+"_close"]);
+    let accordionHeading = constructAccordionHeading("is_open_on_"+data[daysUsed[getDay]], data[daysUsed[getDay]+"_opening_time"], data[daysUsed[getDay]+"_closing_time"]);
+
     return `
         <ins-accordion>
-            <ins-accordion-item 
-                heading="${accordionHeading}" 
-                icon="icon-clock"
-                open-icon="icon-angle-down"
-                close-icon="icon-angle-up">
-                <div class='spacer x-small'></div>
-                <div class="grid-x grid-padding-x">
-                    <div class="large-3 medium-4 small-4 cell">${getDay == 0 ? `<span class="current-sched">Sunday</span>` : `Sunday`}</div>
-                    <div class="large-9 medium-8 small-8 cell">
-                        ${getDay == 0 ? `<span class="current-sched">${constructDaySchedule(data.sunday_enabled, data.sunday_open, data.sunday_close)}</span>` : `${constructDaySchedule(data.sunday_enabled, data.sunday_open, data.sunday_close)}`}
-                    </div>
+            <ins-accordion-item
+                class="store-availability-wrapper"
+                heading="${accordionHeading}">
+                <div class="time-sched-wrapper">
+                    <span class="location-sub-texts${getDay == 0 ? ` bolder` : ``}">Sunday</span>
+                    <span class="location-sub-texts${getDay == 0 ? ` bolder` : ``}">${constructDaySchedule(data.is_open_on_sunday, data.sunday_opening_time, data.sunday_closing_time)}</span>
                 </div>
-                <div class='spacer x-small'></div>
-                <div class="grid-x grid-padding-x">
-                    <div class="large-3 medium-4 small-4 cell">${getDay == 1 ? `<span class="current-sched">Monday</span>` : `Monday`}</div>
-                    <div class="large-9 medium-8 small-8 cell">
-                        ${getDay == 1 ? `<span class="current-sched">${constructDaySchedule(data.monday_enabled, data.monday_open, data.monday_close)}</span>` : `${constructDaySchedule(data.monday_enabled, data.monday_open, data.monday_close)}`}
-                    </div>
+                <div class="time-sched-wrapper">
+                    <span class="location-sub-texts${getDay == 1 ? ` bolder` : ``}">Monday</span>
+                    <span class="location-sub-texts${getDay == 1 ? ` bolder` : ``}">${constructDaySchedule(data.is_open_on_monday, data.monday_opening_time, data.monday_closing_time)}</span>
                 </div>
-                <div class='spacer x-small'></div>
-                <div class="grid-x grid-padding-x">
-                    <div class="large-3 medium-4 small-4 cell">${getDay == 2 ? `<span class="current-sched">Tuesday</span>` : `Tuesday`}</div>
-                    <div class="large-9 medium-8 small-8 cell">
-                        ${getDay == 2 ? `<span class="current-sched">${constructDaySchedule(data.tuesday_enabled, data.tuesday_open, data.tuesday_close)}</span>` : `${constructDaySchedule(data.tuesday_enabled, data.tuesday_open, data.tuesday_close)}`}
-                    </div>
+                <div class="time-sched-wrapper">
+                    <span class="location-sub-texts${getDay == 2 ? ` bolder` : ``}">Tuesday</span>
+                    <span class="location-sub-texts${getDay == 2 ? ` bolder` : ``}">${constructDaySchedule(data.is_open_on_tuesday, data.tuesday_opening_time, data.tuesday_closing_time)}</span>
                 </div>
-                <div class='spacer x-small'></div>
-                <div class="grid-x grid-padding-x">
-                    <div class="large-3 medium-4 small-4 cell">${getDay == 3 ? `<span class="current-sched">Wednesday</span>` : `Wednesday`}</div>
-                    <div class="large-9 medium-8 small-8 cell">
-                        ${getDay == 3 ? `<span class="current-sched">${constructDaySchedule(data.wednesday_enabled, data.wednesday_open, data.wednesday_close)}</span>` : `${constructDaySchedule(data.wednesday_enabled, data.wednesday_open, data.wednesday_close)}`}
-                    </div>
+                <div class="time-sched-wrapper">
+                    <span class="location-sub-texts${getDay == 3 ? ` bolder` : ``}">Wednesday</span>
+                    <span class="location-sub-texts${getDay == 3 ? ` bolder` : ``}">${constructDaySchedule(data.is_open_on_wednesday, data.wednesday_opening_time, data.wednesday_closing_time)}</span>
                 </div>
-                <div class='spacer x-small'></div>
-                <div class="grid-x grid-padding-x">
-                    <div class="large-3 medium-4 small-4 cell">${getDay == 4 ? `<span class="current-sched">Thursday</span>` : `Thursday`}</div>
-                    <div class="large-9 medium-8 small-8 cell">
-                        ${getDay == 4 ? `<span class="current-sched">${constructDaySchedule(data.thursday_enabled, data.thursday_open, data.thursday_close)}</span>` : `${constructDaySchedule(data.thursday_enabled, data.thursday_open, data.thursday_close)}`}
-                    </div>
+                <div class="time-sched-wrapper">
+                    <span class="location-sub-texts${getDay == 4 ? ` bolder` : ``}">Thursday</span>
+                    <span class="location-sub-texts${getDay == 4 ? ` bolder` : ``}">${constructDaySchedule(data.is_open_on_thursday, data.thursday_opening_time, data.thursday_closing_time)}</span>
                 </div>
-                <div class='spacer x-small'></div>
-                <div class="grid-x grid-padding-x">
-                    <div class="large-3 medium-4 small-4 cell">${getDay == 5 ? `<span class="current-sched">Friday</span>` : `Friday`}</div>
-                    <div class="large-9 medium-8 small-8 cell">
-                        ${getDay == 5 ? `<span class="current-sched">${constructDaySchedule(data.friday_enabled, data.friday_open, data.friday_close)}</span>` : `${constructDaySchedule(data.friday_enabled, data.friday_open, data.friday_close)}`}
-                    </div>
+                <div class="time-sched-wrapper">
+                    <span class="location-sub-texts${getDay == 5 ? ` bolder` : ``}">Friday</span>
+                    <span class="location-sub-texts${getDay == 5 ? ` bolder` : ``}">${constructDaySchedule(data.is_open_on_friday, data.friday_opening_time, data.friday_closing_time)}</span>
                 </div>
-                <div class='spacer x-small'></div>
-                <div class="grid-x grid-padding-x">
-                    <div class="large-3 medium-4 small-4 cell">${getDay == 6 ? `<span class="current-sched">Saturday</span>` : `Saturday`}</div>
-                    <div class="large-9 medium-8 small-8 cell">
-                        ${getDay == 6 ? `<span class="current-sched">${constructDaySchedule(data.saturday_enabled, data.saturday_open, data.saturday_close)}</span>` : `${constructDaySchedule(data.saturday_enabled, data.saturday_open, data.saturday_close)}`}
-                    </div>
+                <div class="time-sched-wrapper">
+                    <span class="location-sub-texts${getDay == 6 ? ` bolder` : ``}">Saturday</span>
+                    <span class="location-sub-texts${getDay == 6 ? ` bolder` : ``}">${constructDaySchedule(data.is_open_on_saturday, data.saturday_opening_time, data.saturday_closing_time)}</span>
                 </div>
             </ins-accordion-item>
         </ins-accordion>`;
@@ -320,7 +361,21 @@ function constructDaySchedule(enabled, open, close) {
 
 /*** Concat string for heading ***/
 function constructAccordionHeading(enabled, open, close) {
-    return `${enabled ? `${!open && !close ? "Open" : `Open ${open ? open : 'n/a'} - ${close ? close : 'n/a'}`}` : "Closed"}`
+    let date = new Date();
+    var day = '' + date.getDay();
+    var hhmm = ('0' + date.getHours()).slice(-2) + ':' + ('0' + date.getMinutes()).slice(-2);
+
+    let days = ['1', '2','3','4','5','6','7'];
+
+    if(enabled && open && close) {
+        var openTime = convertToMilitaryTime(open);
+        var closeTime = convertToMilitaryTime(close);
+        return days.indexOf(day) >= 0 && openTime <= hhmm && hhmm < closeTime ? "Open" : "Closed";
+    }else {
+        return "Closed";
+    }
+
+    // return `${enabled ? `${!open && !close ? "Open" : `Open ${open ? open : 'n/a'} - ${close ? close : 'n/a'}`}` : "Closed"}`
 }
 
 
@@ -333,6 +388,21 @@ function convertTime(time) {
     let ampm = (H < 12 || H === 24) ? " AM" : " PM";
     time = h + time.substr(hourEnd, 3) + ampm;
     return time;
+}
+
+/*** Convert 12 hour (AM/PM) to 24 hour format ***/
+function convertToMilitaryTime(time12h) {
+    const [time, modifier] = time12h.split(' ');
+    let [hours, minutes] = time.split(':');
+    if(parseInt(hours, 10) < 12) {
+        hours = `0${hours}`
+    }else if (hours === '12') {
+        hours = '00';
+    }
+    if (modifier === 'PM') {
+        hours = parseInt(hours, 10) + 12;
+    }
+    return `${hours}:${minutes}`;
 }
 
 /*** Calculate distance  ***/
@@ -365,45 +435,34 @@ function makeInfoWindowEvent(map, infowindow, data, marker) {
         <div class="map-info-card-wrapper">
             <div class="image-wrapper">
                 ${link ? `<a href='${link}' target='_blank'>` : ''}
-                    <img width="340" src="${data.location_image.url 
+                    <img class="location-image" width="80" height="80" src="${data.location_image.url 
                         ? data.location_image.url 
                         : `${domain}assets/modules/locator/images/default.png`}"
                         alt="${data.properties.location_name}"
                         title="${data.properties.location_name}" />
                 ${link ? `</a>` : ''}
             </div>
-            <div class="content-wrapper">
+            <div class='spacer'></div>
+            <div class="location-details">
                 ${link ? `<a href='${link}' target='_blank'>` : ''}
                     <span class='location-name'>${data.properties.location_name}</span>
                 ${link ? `</a>` : ''}
-                <div class='spacer small'></div>
-                ${data.properties.short_description
-                    ? `<div class="description"">
-                            ${data.properties.short_description}
-                        </div>
-                        <div class='spacer small'></div>`
-                    : ''}
-                <p class="full-address">
-                    <i class="icon-map location-icon"></i>
-                    <span class="detail-label location-label">${constructAddress(data.properties)}</span>
+                <div class="spacer xx-small"></div>
+                <p class="location-sub-texts">
+                    ${constructAddress(data.properties)}
                 </p>
-                <div class='spacer x-small'></div>
-                <p class="location-p">
-                    <i class="icon-clock location-icon"></i>
-                    <span class="detail-label">${constructCardSchedule(data.properties)}</span>
-                </p>
-                <div class='spacer small'></div>
-                <div class="links">
+                <div class='spacer'></div>
+                <div class="link-buttons">
                     <ins-button outlined 
                         label='Enquire'
                         size='normal'
-                        class='enquireLocationBtn'
                         id='enquire-${data.id}' 
                         data-id='${data.id}'
                         data-location_name="${data.properties.location_name}"
                         onclick="insLocatorForm.methods.showEnquiryForm('${data.properties.uuid}', \`${data.properties.location_name}\`)">
                     </ins-button>
-                    ${link ? `<ins-button  solid
+                    ${link ? `<div class='spacer small'></div>
+                        <ins-button  solid
                         size='normal' label='View Location'
                         onclick='window.open("${link}", "_blank");'>
                     </ins-button>`  : '' }
@@ -424,6 +483,9 @@ function makeInfoWindowEvent(map, infowindow, data, marker) {
         infowindow.open(map, marker);
         prevWindow = infowindow;
     });
+    google.maps.event.addListener(map, "click", function(event) {
+        infowindow.close();
+    });
 }
 
 /*** Create opening hours html elements ***/
@@ -431,8 +493,7 @@ function constructCardSchedule(data) {
     let dateNow = new Date();
     let daysUsed = ['sunday', 'monday','tuesday','wednesday','thursday','friday','saturday'];
     let getDay = dateNow.getDay();
-    let accordionHeading = constructAccordionHeading(data[daysUsed[getDay]+"_enabled"], data[daysUsed[getDay]+"_open"], data[daysUsed[getDay]+"_close"]);
-
+    let accordionHeading = constructAccordionHeading("is_open_on_"+data[daysUsed[getDay]], data[daysUsed[getDay]+"_opening_time"], data[daysUsed[getDay]+"_closing_time"]);
     return `${accordionHeading}`;
 }
 

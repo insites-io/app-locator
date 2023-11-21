@@ -22,13 +22,14 @@
     {% graphql data = 'modules/website/trigger_api_call', name: 'modules/client/get_google_maps_api_key' %}
 
     {%- assign api_key = data.items.response.body | parse_json | dig: 'items','results' | first | dig: 'key' -%}
-    
-    <div class="spacer xxxx-large"></div>
 
     <div class="locations-list-wrapper wrapper">
         <div class="grid-container">
             <div class="grid-x grid-padding-x">
-                <div class="large-3 medium-4 small-12 cell search-options-wrapper">
+                <div class="large-4 medium-4 small-12 cell search-options-wrapper">
+                    <div class="spacer xxxx-large"></div>
+                    <div class="spacer"></div>
+
                     <ins-input label="Search" id="address-search"
                         {% if api_key == blank %}
                         readonly placeholder="Google API key not yet configured."
@@ -54,9 +55,13 @@
                         solid color="blue"
                         icon="icon-search">
                     </ins-button>
+
+                    <div class="spacer"></div>
+                    <div class="spacer xxxx-large"></div>
                 </div>
 
-                <div class="large-9 medium-8 small-12 cell search-results-wrapper">
+                <div class="large-8 medium-8 small-12 cell search-results-wrapper">
+                    <div class="spacer xxxx-large"></div>
                     <div class="view-type-buttons-wrapper grid-x align-right align-middle spacer">
                         <span>View:</span>
                         <div class="view-type-buttons grid-x">
@@ -86,12 +91,11 @@
                             <ul id="results-list"></ul>
                         </div>
                     </div>
+                    <div class="spacer xxxx-large"></div>
                 </div>
             </div>
         </div>
     </div>
-
-    <div class="spacer xxxx-large"></div>
     <!-- Insites Locator UI Dependencies -->
     {%- include 'modules/locator/app_locator_dependencies' -%}
     <!-- END Insites Locator UI Dependencies  -->
