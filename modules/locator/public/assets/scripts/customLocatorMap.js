@@ -39,6 +39,13 @@ const addressFieldEl = document.getElementById('address-search');
 const searchResults = document.getElementById('search-results');
 // const searchResultsBtn = document.getElementById('search-results-btn');
 const locatorMap = document.getElementById('locator-map');
+const viewButtons = document.getElementById('view-type-buttons-wrapper');
+
+var insBaseTable = document.getElementById('locationsTable');
+insBaseTable.addEventListener('insPaginationChange', tablePaginationHandler);
+insBaseTable.pageNumber = 1;
+insBaseTable.style.display = "none";
+
 // Add initMap initializations, functions, binding, etc..
 function initMapBinding() {
     insitesLocator.events.initEventListeners();
@@ -101,6 +108,13 @@ function geocodeAddress(centerAddress) {
     });
 }
 
+function tablePaginationHandler(event){
+    insBaseTable.loadingScreen = false;
+    filter.size = event.detail.pageSize;
+    filter.page = event.detail.pageNumber;
+    searchLocations();
+}
+
 /*** Geo search locations - Axios ***/
 async function searchLocations(keyword) {
     this.filter.page == 1 ? insLocatorForm.data.setData('locations', []) : '';
@@ -109,6 +123,9 @@ async function searchLocations(keyword) {
         let locations = response.data.items.results;
         if (locations.length) {
             updateMarkers(locations);
+            insBaseTable.style.display = "block";
+            insBaseTable.totalCount = locations.length;
+            viewButtons.style.display = "flex";
             // listLocation(locations);
         } else {
             noSearchResultsHandler(keyword);
@@ -241,7 +258,7 @@ function listLocation(location, index) {
                         </div>
                     </div>
                     <div class="grid-view-buttons">
-                        <div class='buttons'>
+                        <div class='link-buttons'>
                             <ins-button outlined 
                                 label='Enquire'
                                 size='normal'
@@ -251,7 +268,8 @@ function listLocation(location, index) {
                                 data-location_name="${location.properties.location_name}"
                                 onclick="insLocatorForm.methods.showEnquiryForm('${location.properties.uuid}', \`${location.properties.location_name}\`)">
                             </ins-button>
-                            ${link ? `<ins-button solid
+                            ${link ? `<div class='spacer small'></div>
+                                <ins-button solid
                                 icon='icon-eye'
                                 size='normal' label='More Information'
                                 onclick='window.open("${link}", "_blank");'>
@@ -315,7 +333,7 @@ function constructSchedule(data) {
     let daysUsed = ['sunday', 'monday','tuesday','wednesday','thursday','friday','saturday'];
     let getDay = dateNow.getDay();
     let currentDay = daysUsed[getDay];
-    let accordionHeading = constructAccordionHeading("is_open_on_"+data[daysUsed[getDay]], data[daysUsed[getDay]+"_opening_time"], data[daysUsed[getDay]+"_closing_time"]);
+    let accordionHeading = constructAccordionHeading(data["is_open_on_"+daysUsed[getDay]], data[daysUsed[getDay]+"_opening_time"], data[daysUsed[getDay]+"_closing_time"]);
 
     return `
         <ins-accordion>
@@ -361,6 +379,7 @@ function constructDaySchedule(enabled, open, close) {
 
 /*** Concat string for heading ***/
 function constructAccordionHeading(enabled, open, close) {
+    console.log(enabled)
     let date = new Date();
     var day = '' + date.getDay();
     var hhmm = ('0' + date.getHours()).slice(-2) + ':' + ('0' + date.getMinutes()).slice(-2);
@@ -371,6 +390,8 @@ function constructAccordionHeading(enabled, open, close) {
         var openTime = convertToMilitaryTime(open);
         var closeTime = convertToMilitaryTime(close);
         return days.indexOf(day) >= 0 && openTime <= hhmm && hhmm < closeTime ? "Open" : "Closed";
+    }else if(enabled === true && (!open && !close)) {
+        return "Open";
     }else {
         return "Closed";
     }
@@ -456,6 +477,7 @@ function makeInfoWindowEvent(map, infowindow, data, marker) {
                     <ins-button outlined 
                         label='Enquire'
                         size='normal'
+                        icon='icon-email-1'
                         id='enquire-${data.id}' 
                         data-id='${data.id}'
                         data-location_name="${data.properties.location_name}"
@@ -463,7 +485,8 @@ function makeInfoWindowEvent(map, infowindow, data, marker) {
                     </ins-button>
                     ${link ? `<div class='spacer small'></div>
                         <ins-button  solid
-                        size='normal' label='View Location'
+                        icon='icon-eye'
+                        size='normal' label='More Information'
                         onclick='window.open("${link}", "_blank");'>
                     </ins-button>`  : '' }
                 </div>
@@ -493,7 +516,7 @@ function constructCardSchedule(data) {
     let dateNow = new Date();
     let daysUsed = ['sunday', 'monday','tuesday','wednesday','thursday','friday','saturday'];
     let getDay = dateNow.getDay();
-    let accordionHeading = constructAccordionHeading("is_open_on_"+data[daysUsed[getDay]], data[daysUsed[getDay]+"_opening_time"], data[daysUsed[getDay]+"_closing_time"]);
+    let accordionHeading = constructAccordionHeading(data["is_open_on_"+daysUsed[getDay]], data[daysUsed[getDay]+"_opening_time"], data[daysUsed[getDay]+"_closing_time"]);
     return `${accordionHeading}`;
 }
 

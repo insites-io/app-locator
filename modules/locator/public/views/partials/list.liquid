@@ -62,7 +62,7 @@
 
                 <div class="large-8 medium-8 small-12 cell search-results-wrapper">
                     <div class="spacer xxxx-large"></div>
-                    <div class="view-type-buttons-wrapper grid-x align-right align-middle spacer">
+                    <div id="view-type-buttons-wrapper" class="grid-x align-right align-middle spacer">
                         <span>View:</span>
                         <div class="view-type-buttons grid-x">
                             <div id="map-view" class="type-button icon-map active"></div>
@@ -73,9 +73,8 @@
                     <div id="search-results">
                         <div id="locator-map">
                             <div id="ins-locator-map"></div>
+                            <div class="spacer xxx-large"></div>
                         </div>
-                        
-                        <div class="spacer xxx-large"></div>
                         
                         <div id="results-loader">
                             <ins-loader
@@ -90,6 +89,12 @@
                         <div id="results-map">
                             <ul id="results-list"></ul>
                         </div>
+                        <ins-table
+                            id="locationsTable"
+                            static-table
+                            without-search
+                            no-wrap>
+                        </ins-table>
                     </div>
                     <div class="spacer xxxx-large"></div>
                 </div>

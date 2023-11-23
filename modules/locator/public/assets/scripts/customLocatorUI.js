@@ -5,6 +5,7 @@ var insitesLocator = (function () {
     const searchResults = document.getElementById('search-results');
     const searchDistanceEl = document.getElementById('search-distance');
     // const searchResultsBtn = document.getElementById('search-results-btn');
+    const typButtons = document.querySelectorAll(".type-button");
 
     return {
         events: {
@@ -13,12 +14,12 @@ var insitesLocator = (function () {
                     if (navigator.geolocation) {
                         addressField.hasError = false;
                         navigator.geolocation.getCurrentPosition(function(position){
-                          filter.location = {
-                            lat: position.coords.latitude,
-                            lng: position.coords.longitude
-                          }
-                          addressField.value = "Current Location";
-                          searchLocations("your current location");
+                            filter.location = {
+                                lat: position.coords.latitude,
+                                lng: position.coords.longitude
+                            }
+                            addressField.value = "Current Location";
+                            searchLocations("your current location");
                         });
                 
                     } else {
@@ -48,6 +49,14 @@ var insitesLocator = (function () {
                 searchDistanceEl.addEventListener('insValueChange', function (ev) {
                     updateSearchRadius(ev.detail);
                 });
+                typButtons.forEach((btn) => {// index will be current button index
+                    btn.addEventListener("click", function(e) {
+                        typButtons.forEach( btns => btns.classList.remove('active') )
+                        this.classList.add("active");
+                        searchResults.className = '';
+                        searchResults.classList.add(this.id);
+                    });
+                })
             },
         },
         methods: {
