@@ -57,6 +57,65 @@
                     </ins-button>
 
                     <div class="spacer"></div>
+
+                    <ins-button label="Hide Filters"
+                        id="advanced-filter-btn"
+                        color="blue"
+                        icon="icon-sliders">
+                    </ins-button>
+
+                    <div id="location-filters-container">
+                        <div class="spacer"></div>
+                        <hr>
+                        <div class="spacer"></div>
+                        {%- include "modules/insites_locator/controllers/utilities/advanced_filters/get_filter_options" -%}
+                        
+                        {% assign filter_options = '{}' | parse_json %}
+                        {% for filter_option in context.exports.filter_options._system_field_names %}
+                            {% assign _data = '{}' | parse_json %}
+                            {% capture var %}filter-{{ forloop.index }}{% endcapture %}
+                            {% assign filter_options = filter_options | add_hash_key: var, _data %}
+                            {% assign filter_options[var] = filter_options[var] | add_hash_key: "field_name", filter_option[0] %}
+                            {% if filter_option[1].options != blank %}
+                                {% assign filter_options[var] = filter_options[var] | add_hash_key: "field_options", filter_option[1].options | parse_json %}
+                            {% endif %}
+                        {% endfor %}
+
+                        <div class="filter-label">
+                            {{ filter_options["filter-1"]["field_name"] }}
+                        </div>
+                        <div class="spacer small"></div>
+                        {% if filter_options["filter-1"]["field_options"] != blank %}
+                            {% for option in filter_options["filter-1"]["field_options"] %}
+                                <ins-checkbox 
+                                    name="filter_1" 
+                                    label="{{ option.value }}" 
+                                    value="{{ option.uuid }}">
+                                </ins-checkbox>
+                            {% endfor %}
+                        {% else %}
+                            <p class="empty-filter-text">
+                                No {{ filter_options["filter-1"]["field_name"] }} filter added yet.
+                            </p>
+                        {% endif %}
+                        <div class="spacer"></div>
+                        <hr>
+                        <div class="spacer"></div>
+
+                        <ins-select
+                            id="filter_2"
+                            label="{{ filter_options["filter-2"]["field_name"] }}" 
+                            multiple
+                            searchable>
+                            {% for option in filter_options["filter-2"]["field_options"] %}
+                                <ins-select-option 
+                                    name="filter-2" 
+                                    label="{{ option.value }}"
+                                    value="{{ option.uuid }}">
+                                </ins-select-option>
+                            {% endfor %}
+                        </ins-select>
+                    </div>
                     <div class="spacer xxxx-large"></div>
                 </div>
 

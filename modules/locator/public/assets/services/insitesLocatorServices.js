@@ -46,6 +46,7 @@ var InsLocatorServices = (function(){
             let url = `/api/locator/locations?page=${filter.page}&size=${filter.size}`;
                 url+= `&lat=${filter.location.lat}&lng=${filter.location.lng}`;
                 url += `&distance=${filter.distance}`;
+                url += `&system_fields=${filter.system_fields}`;
             return await processRequest('get', url);
         },
         processRequest: processRequest

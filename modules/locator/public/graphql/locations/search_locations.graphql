@@ -7,7 +7,8 @@ query search_locations(
     $uuid: String,
     $distance: Float = 10.0,
     $point: GeometryJSON,
-    $system_field_uuid: String
+    $system_field_uuid: String,
+    $system_field_uuids: [String]
 ) {
     items: records(
         page: $page
@@ -28,7 +29,9 @@ query search_locations(
                 { name: "status", value: "enabled" },
                 { name: "uuid", value: $uuid },
                 { name: "start_date", range: { gte: $date_from }},
-                { name: "end_date", range: { lte: $date_to }}
+                { name: "end_date", range: { lte: $date_to }},
+                { name: "system_field_uuids", array_overlaps: $system_field_uuids}
+                # { name: "system_field_uuids", array_contains: $system_field_uuids}
             ]
         }
     ) {

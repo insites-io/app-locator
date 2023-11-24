@@ -1,3 +1,5 @@
+let selectedFilter1 = [];
+let selectedFilter2 = [];
 var insitesLocator = (function () {
     // search elements
     const searchSubmitBtn = document.getElementById('search-submit');
@@ -6,6 +8,9 @@ var insitesLocator = (function () {
     const searchDistanceEl = document.getElementById('search-distance');
     // const searchResultsBtn = document.getElementById('search-results-btn');
     const typButtons = document.querySelectorAll(".type-button");
+    const filter1Group = document.getElementsByName('filter_1');
+    const filter2 = document.getElementById("filter_2");
+    const advancedFilterBtn = document.getElementById("advanced-filter-btn");
 
     return {
         events: {
@@ -56,7 +61,33 @@ var insitesLocator = (function () {
                         searchResults.className = '';
                         searchResults.classList.add(this.id);
                     });
-                })
+                });
+                filter1Group.forEach(field => {
+                    field.addEventListener('insCheck', event => {
+                        var event = event.detail;
+                        // if checkbox is checked, push value to array
+                        if(event.checked) {
+                            selectedFilter1.push(event.value);
+                        } else {
+                            // else, remove item from array
+                            selectedFilter1.splice(selectedFilter1.indexOf(event.value), 1);
+                        }
+                    });
+                });
+                filter2.addEventListener('insValueChange', event => {
+                    selectedFilter2 = event.detail;
+                });
+                advancedFilterBtn.addEventListener('click', function (ev) {
+                    var filtersContainer = document.getElementById('location-filters-container');
+                    if (filtersContainer.classList.contains('hidden')) {
+                        this.label = "Hide Filters";
+                        filtersContainer.classList.remove("hidden");
+                    } else {
+                        this.label = "Advanced Filters";
+                        filtersContainer.classList.add("hidden");
+                    }
+                    
+                });
             },
         },
         methods: {

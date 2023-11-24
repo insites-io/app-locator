@@ -26,12 +26,14 @@ var mapOptions = {
 // Markers
 var markers = [], locations = [],
     markerImages = { imagePath: 'https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/m' };
+var gmarkers = [];
 // API for getting Locations
 var filter = {
     page: 1, // page number
     size: 10, // search results per page
     distance: 5, // search radius in KM
-    location: {} // location [lng,lat]
+    location: {}, // location [lng,lat]
+    system_fields: [] // system_field uuids
 }
 // Elements
 const searchSubmitBtn = document.getElementById('search-submit');
@@ -41,10 +43,14 @@ const searchResults = document.getElementById('search-results');
 const locatorMap = document.getElementById('locator-map');
 const viewButtons = document.getElementById('view-type-buttons-wrapper');
 
-var insBaseTable = document.getElementById('locationsTable');
+const insBaseTable = document.getElementById('locationsTable');
 insBaseTable.addEventListener('insPaginationChange', tablePaginationHandler);
 insBaseTable.pageNumber = 1;
+insBaseTable.pageSize = 10;
+insBaseTable.pageSizeOptions = [10, 20, 50];
 insBaseTable.style.display = "none";
+
+var markerClusterer;
 
 // Add initMap initializations, functions, binding, etc..
 function initMapBinding() {
@@ -117,6 +123,8 @@ function tablePaginationHandler(event){
 
 /*** Geo search locations - Axios ***/
 async function searchLocations(keyword) {
+    const selected = [...selectedFilter1, ...selectedFilter2];
+    filter.system_fields = selected;
     this.filter.page == 1 ? insLocatorForm.data.setData('locations', []) : '';
     let response = await InsLocatorServices.searchLocations(this.filter);
     if (response.state && response.data.items) {
@@ -124,11 +132,12 @@ async function searchLocations(keyword) {
         if (locations.length) {
             updateMarkers(locations);
             insBaseTable.style.display = "block";
-            insBaseTable.totalCount = locations.length;
+            insBaseTable.totalCount = response.data.items.total_entries;
             viewButtons.style.display = "flex";
             // listLocation(locations);
         } else {
             noSearchResultsHandler(keyword);
+            insBaseTable.style.display = "none";
         }
     } else {
         console.error("Failed to search for location.", response.data.errors);
@@ -137,6 +146,7 @@ async function searchLocations(keyword) {
 
 /*** Loop through results to create map markers & info cards ***/
 function updateMarkers(list) {
+    resetMarkers();
     insLocatorForm.data.pushArrayData('locations', list);
 
     markers = [];
@@ -172,8 +182,8 @@ function updateMarkers(list) {
     map.setZoom(14);
 
     // Add MarkerClusters to map.
-    let markerCluster = new MarkerClusterer(map, this.markers, markerImages);
-    let styles = markerCluster.getStyles();
+    markerClusterer = new MarkerClusterer(map, this.markers, markerImages);
+    let styles = markerClusterer.getStyles();
     for (let i=0; i<styles.length; i++) {
         styles[i].textColor = "white";
     }
@@ -287,7 +297,7 @@ function listLocation(location, index) {
  ***/
 function getFields(fields) {
     let system_fields = "";
-    fields.forEach((field, index) => system_fields += `${(fields.length > 1 && index === fields.length - 1) ? ' and ' : ''}${field.properties.value}${(index === fields.length - 1 || index === fields.length - 2) ? '' : ', '}`);
+    fields.forEach((field, index) => system_fields += `${(fields.length > 1 && index === fields.length - 1) ? ' & ' : ''}${field.properties.value}${(index === fields.length - 1 || index === fields.length - 2) ? '' : ', '}`);
 
     return system_fields;
 }
@@ -379,7 +389,6 @@ function constructDaySchedule(enabled, open, close) {
 
 /*** Concat string for heading ***/
 function constructAccordionHeading(enabled, open, close) {
-    console.log(enabled)
     let date = new Date();
     var day = '' + date.getDay();
     var hhmm = ('0' + date.getHours()).slice(-2) + ':' + ('0' + date.getMinutes()).slice(-2);
@@ -531,11 +540,27 @@ function noSearchResultsHandler(keyword) {
     locatorMap.classList.remove("medium-6");
     locatorMap.classList.add("large-12");
     locatorMap.classList.add("medium-12");
-    resultsList.style.display = "none";
+    resultsList.setAttribute('style', 'display:none !important');
     resultsLoader.style.display = "none";
+    viewButtons.style.display = "none";
 
-    new MarkerClusterer(map, [], markerImages);
+    resetMarkers();
     App.events.swal('OK', `No search results for ${keyword}.`, "");
+}
+
+function resetMarkers() {
+    new MarkerClusterer(map, [], markerImages);
+    // remove existing markers
+    removeMarkers();
+}
+
+function removeMarkers(){
+    for(i=0; i<markers.length; i++){
+        markers[i].setMap(null);
+    }
+    markers = [];
+
+    if (markerClusterer) markerClusterer.clearMarkers();
 }
 
 /** Pan Map to marker */
