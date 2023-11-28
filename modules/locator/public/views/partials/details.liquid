@@ -3,10 +3,18 @@
 {%- assign faqs = context.exports.data.faqs -%}
 {%- assign location_image = context.exports.data.location_image -%}
 {%- assign id = context.exports.data.id -%}
-<div class="ins-locator-wrapper">
+{%- include "modules/locator/utilities/get_system_field_names" -%}
+{%- assign system_field = context.exports.system_fields | dig: "items" | dig: "results" | dig: "properties" | first | dig: "metadata" |  dig: "system_fields" -%}
+{% assign system_field_1_name = system_field[0].system_field_name %}
+{% assign system_field_2_name = system_field[1].system_field_name %}
+{%- assign system_field_1 = context.exports.data.system_field_1 -%}
+{%- assign system_field_2 = context.exports.data.system_field_2 -%}
+
+<div class="location-details-container">
+
+    {% include 'modules/locator/content/layout/go-back-nav', label: "Go Back" %}
 
     <div class="location-details grid-container">
-        <div class="spacer xxxx-large"></div>
 
         {% comment %} Address {% endcomment %}
 
@@ -44,29 +52,40 @@
         {% comment %} Schedule / Store Hours {% endcomment %}
         {% function schedule = 'modules/locator/functions/build_schedule', item: item %}
 
-        {% include 'modules/locator/content/layout/go-back-nav', label: "Back to Locations Search" %}
-
         <article>
-            <div class="grid-x">
-                <div class="large-12 cell">
-                    <div class="location-heading">
-                        <h1 class="h1-font font-heading">{{ item.location_name }}</h1>
-                        <div class="spacer xx-large"></div>
+            <div class="location-heading">
+                {%- if location_image.url -%}
+                    <img src="{{ location_image.url }}" alt="{{ item.location_name }}" class="location-image" width="175" height="175" />
+                {%- else -%}
+                    <img src="{{ 'modules/locator/images/default.png' | asset_url }}" alt="Placeholder Image" class="location-image" width="175" height="175" />
+                {%- endif -%}
+                <div class="location-details">
+                    {% comment %} <div class="spacer large"></div> {% endcomment %}
+                    <h1 class="h1-font font-heading">{{ item.location_name }}</h1>
+                    <div class="spacer x-small"></div>
+                    <div class="location-sub-texts">
+                        {{ full_address }}
                     </div>
-                    <div class="location-img">
-                        {%- if location_image.url -%}
-                            <img src="{{ location_image.url }}" alt="{{ item.location_name }}" />
-                        {%- else -%}
-                            <img src="{{ 'modules/locator/images/default.png' | asset_url }}" alt="Placeholder Image" />
-                        {%- endif -%}
-                        <div class="spacer xx-large"></div>
-                    </div>
+                    <div class="spacer x-small"></div>
+                    <ins-tag
+                        id="location-schedule"></ins-tag>
                 </div>
+                <ins-button solid
+                    icon='icon-email-1'
+                    label='Enquire'
+                    class='enquireLocationBtn'
+                    id='enquire-{{ id }}' 
+                    data-id='{{ id }}'
+                    data-location_name="{{ item.location_name }}"
+                    onclick="insLocatorForm.methods.showEnquiryForm('{{ item.uuid }}', `{{ item.location_name }}`)">
+                </ins-button>
             </div>
+
+            <div class="spacer xxxx-large"></div>
 
             <div class="grid-x grid-padding-x">
                 <div class="location-content large-7 medium-6 small-12 cell">
-                    <div>
+                    <div class="dynamic-content">
                         {{ item.short_description }}
                     </div>
 
@@ -85,36 +104,19 @@
                         {{ item.long_description | html_safe}}
                     </div>
 
-                    {%- if gallery_1.size > 0 -%}
-                    <div class="spacer xxx-large"></div>
-                    <div class="locator-gallery">
-                        <h2>Gallery</h2>
-                        <div class="spacer"></div>
-                        <ins-gallery 
-                            thumbnail-layout="slider">
-                            {%- for item in gallery_1 -%}
-                            <ins-gallery-image
-                                thumbnail="{{ item.file }}"
-                                image="{{ item.file }}">
-                            </ins-gallery-image>
-                            {%- endfor -%}
-                        </ins-gallery>
-                    </div>
-                    {%- endif -%}
-
                     {%- comment -%}This FAQ will be populated once the update to module is done{%- endcomment -%}
-                    {% if item.faq_enabled -%}
+                    {% if item.is_faqs_displayed -%}
                     <div class="spacer xxx-large"></div>
-                    <div class="locator-faq">
-                        <h2>FAQ</h2>
+                    <div class="location-faqs">
+                        <h2>FAQs</h2>
                         <div class="spacer"></div>
                         {%- if item.faqs_section_heading != blank -%}
-                            <div><p>{{ item.faqs_section_heading }}</p></div>
+                            <p class="faq-headings">{{ item.faqs_section_heading }}</p>
                             <div class="spacer"></div>
                         {%- endif -%}
 
                         {%- if item.faqs_section_subheading != blank -%}
-                            <div><p>{{ item.faqs_section_subheading }}</p></div>
+                            <p class="faq-headings">{{ item.faqs_section_subheading }}</p>
                             <div class="spacer"></div>
                         {%- endif -%}
 
@@ -122,9 +124,7 @@
                             <ins-accordion>
                             {%- for faq in faqs -%}
                                 <ins-accordion-item 
-                                    heading="{{ faq.properties.question }}"         
-                                    open-icon="icon-plus"
-                                    close-icon="icon-minus">
+                                    heading="{{ faq.properties.question }}">
                                     <div class="dynamic-content">
                                         {{ faq.properties.answer | html_safe }}
                                     </div>
@@ -146,9 +146,10 @@
 
                     <a href="" target="_blank" 
                         onclick="mapsSelector()" 
-                        class="get-directions"
+                        class="location-links"
                         data-test="contact-us-get-directions">
-                        <span class="icon-location-arrow"></span> Get Directions
+                        <i class="icon-location-arrow"></i>
+                        <span>Get Directions</span>
                     </a>
                     <script>
                         function mapsSelector() {
@@ -163,7 +164,7 @@
                     </script>
 
                     <div class="spacer x-small"></div>
-                    <p id="full-address">
+                    <p id="full-address" class="location-links">
                         <i class="icon-map"></i> <span class="location-label">{{ full_address }}</span>
                     </p>    
                     <p id="geo-json" class="hide">{{ item.geojson | json }}</p>
@@ -175,7 +176,7 @@
                     {%- if item.phone_number -%}
                     <div class="spacer x-small"></div>
                     <p>
-                        <a href="tel:+{{ item.phone_country_code }}{{ item.phone_number | replace: ' ', '' }}">
+                        <a href="tel:+{{ item.phone_country_code }}{{ item.phone_number | replace: ' ', '' }}" class="location-links">
                             <i class="icon-phone1"></i>
                             <span class="location-label">+{{ item.phone_country_code }} {{ item.phone_number }}</span>
                         </a>
@@ -185,51 +186,96 @@
                     {%- if item.email -%}
                     <div class="spacer x-small"></div>
                     <p>
-                        <a href="mailto:{{ item.email }}"> 
+                        <a href="mailto:{{ item.email }}" class="location-links"> 
                             <i class="icon-mail1"></i>
                             <span class="location-label">{{ item.email }}</span>
                         </a>
                     </p>
-                    {%- endif -%}
-
-                    <div class="spacer large"></div>    
-                    <ins-button solid
-                        label='Enquire Now'
-                        class='enquireLocationBtn'
-                        id='enquire-{{ id }}' 
-                        data-id='{{ id }}'
-                        data-location_name="{{ item.location_name }}"
-                        onclick="insLocatorForm.methods.showEnquiryForm('{{ item.uuid }}', `{{ item.location_name }}`)">
-                    </ins-button>
+                    {%- endif -%}  
 
                     <div class="spacer xxx-large"></div>
-                    <h3 class="h3-font">Opening Hours</h3>
+                    <h3 class="font-color-sub">Opening Hours</h3>
                     <div class="spacer large"></div>
 
                     {%- assign day = "now" | date: "%A" -%}
                     <div class="opening-hours grid-x grid-padding-x">
-                        <div class="large-3 medium-4 small-4 cell spacer x-small"><p class="day">Sunday</p></div>
+                        <div class="large-3 medium-4 small-4 cell spacer x-small"><p class="day">Sunday:</p></div>
                         <div class="large-6 large-offset-1 medium-8 medium-offset-0 small-7 small-offset-1 cell spacer x-small"><p>{{ schedule['sunday'].time }}</p></div>
 
-                        <div class="large-3 medium-4 small-4 cell spacer x-small"><p class="day">Monday</p></div>
+                        <div class="large-3 medium-4 small-4 cell spacer x-small"><p class="day">Monday:</p></div>
                         <div class="large-6 large-offset-1 medium-8 medium-offset-0 small-7 small-offset-1 cell spacer x-small"><p>{{ schedule['monday'].time }}</p></div>
 
-                        <div class="large-3 medium-4 small-4 cell spacer x-small"><p class="day">Tuesday</p></div>
+                        <div class="large-3 medium-4 small-4 cell spacer x-small"><p class="day">Tuesday:</p></div>
                         <div class="large-6 large-offset-1 medium-8 medium-offset-0 small-7 small-offset-1 cell spacer x-small"><p>{{ schedule['tuesday'].time }}</p></div>
 
-                        <div class="large-3 medium-4 small-4 cell spacer x-small"><p class="day">Wednesday</p></div>
+                        <div class="large-3 medium-4 small-4 cell spacer x-small"><p class="day">Wednesday:</p></div>
                         <div class="large-6 large-offset-1 medium-8 medium-offset-0 small-7 small-offset-1 cell spacer x-small"><p>{{ schedule['wednesday'].time }}</p></div>
 
-                        <div class="large-3 medium-4 small-4 cell spacer x-small"><p class="day">Thursday</p></div>
+                        <div class="large-3 medium-4 small-4 cell spacer x-small"><p class="day">Thursday:</p></div>
                         <div class="large-6 large-offset-1 medium-8 medium-offset-0 small-7 small-offset-1 cell spacer x-small"><p>{{ schedule['thursday'].time }}</p></div>
 
-                        <div class="large-3 medium-4 small-4 cell spacer x-small"><p class="day">Friday</p></div>
+                        <div class="large-3 medium-4 small-4 cell spacer x-small"><p class="day">Friday:</p></div>
                         <div class="large-6 large-offset-1 medium-8 medium-offset-0 small-7 small-offset-1 cell spacer x-small"><p>{{ schedule['friday'].time }}</p></div>
 
-                        <div class="large-3 medium-4 small-4 cell spacer x-small"><p class="day">Saturday</p></div>
+                        <div class="large-3 medium-4 small-4 cell spacer x-small"><p class="day">Saturday:</p></div>
                         <div class="large-6 large-offset-1 medium-8 medium-offset-0 small-7 small-offset-1 cell spacer x-small"><p>{{ schedule['saturday'].time }}</p></div>
                     </div>
+
+                    {%- if item.facebook_link or item.twitter_link or item.linkedin_link -%}
+                        <div class="spacer xxx-large"></div>
+                        <div class="social-media-links">
+                            <span class="grid-x font-color-sub">
+                                Follow Us
+                            </span>
+                            <div class="spacer large"></div>
+                            <div class="social-media-icons">
+                                {%- if item.facebook_link -%} 
+                                    <a href="{{ item.facebook_link }}" target="_blank" class="media-icon"> 
+                                        <i class="icon-facebook"></i>
+                                    </a>
+                                {%- endif -%}
+                                {%- if item.twitter_link -%} 
+                                    <a href="{{ item.twitter_link }}" target="_blank" class="media-icon"> 
+                                        <i class="icon-twitter"></i>
+                                    </a>
+                                {%- endif -%}
+                                {%- if item.linkedin_link -%} 
+                                    <a href="{{ item.linkedin_link }}" target="_blank" class="media-icon"> 
+                                        <i class="icon-linkedin"></i>
+                                    </a>
+                                {%- endif -%}
+                            </div>
+                        </div>
+                    {%- endif -%}
                 </div>
+            </div>
+
+            <div class="spacer xxxx-large"></div>
+
+            <div class="other-info-container">
+                <ins-heading label="Other Info"></ins-heading>
+                <ins-info-table 
+                    id="other-info-table" 
+                    no-wrap
+                    text-overflow="no-wrap">
+                </ins-info-table>
+
+                {%- if gallery_1.size > 0 -%}
+                    <div class="spacer xxx-large"></div>
+                    <div class="locator-gallery">
+                        <ins-heading label="Store Photos"></ins-heading>
+                        <div class="spacer large"></div>
+                        <ins-gallery 
+                            thumbnail-layout="slider">
+                            {%- for item in gallery_1 -%}
+                            <ins-gallery-image
+                                thumbnail="{{ item.file.url }}"
+                                image="{{ item.file.url }}">
+                            </ins-gallery-image>
+                            {%- endfor -%}
+                        </ins-gallery>
+                    </div>
+                {%- endif -%}
             </div>
         </article>
 
@@ -245,3 +291,30 @@
 </div>
 
 <script src="{{ 'modules/locator/scripts/details-page.js' | asset_url }}"></script>
+
+<script>
+    window.onload = function() {
+        let dateNow = new Date();
+        let daysUsed = ['sunday', 'monday','tuesday','wednesday','thursday','friday','saturday'];
+        let getDay = dateNow.getDay();
+        let location = {{ item }};
+        let isOpen = constructAccordionHeading(location["is_open_on_"+daysUsed[getDay]], location[daysUsed[getDay]+"_opening_time"], location[daysUsed[getDay]+"_closing_time"]);
+        document.getElementById("location-schedule").setAttribute("label", isOpen);
+        document.getElementById("location-schedule").setAttribute("color", isOpen == "Open" ? "green" : "red");
+    };
+
+
+    let systemField1 = {{ system_field_1 }};
+    let system_field_1 = systemField1.map(({ value }) => value).join(', ').replace(/, ([^,]*)$/, ' & $1');
+    let systemField2 = {{ system_field_2 }};
+    let system_field_2 = systemField2.map(({ value }) => value).join(', ').replace(/, ([^,]*)$/, ' & $1');
+    let infoTable = document.getElementById('other-info-table');
+    var infoData = [
+        { "{{ system_field_1_name }}": system_field_1 },
+        { "Location": "{{ full_address }}" },
+        { "Email": "{{ item.email }}" },
+        { "Contact Number": "+{{ item.phone_country_code }} {{ item.phone_number }}" },
+        { "{{ system_field_2_name }}": system_field_2 }
+    ]
+    infoTable.tableData = infoData;
+</script>

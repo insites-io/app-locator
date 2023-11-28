@@ -10,11 +10,14 @@
 {% assign url = url | default: context.params.slug %}
 {% assign label = label | default: 'Go Back' %}
 
-<div class="grid-x grid-padding-x go-back-nav">
-    <div class="large-12 cell">
-        <a class="button-default color-font-head" href="/{{ url }}" data-test="go-back-link">
-            <i class="icon-angle-left"></i>&nbsp;&nbsp; {{ label }}
-        </a>
-        <div class="spacer xx-large"></div>
+<section class="title-banner bg-main">
+    <div class="wrapper">
+        <div class="grid-container">
+            <div class="spacer xxx-large"></div>
+            <a class="button-default font-color-inv go-back-link" href="/{{ url }}">
+                <i class="icon-angle-left"></i>&nbsp;&nbsp; {{ label }}
+            </a>
+            <div class="spacer xxx-large"></div>
+        </div>
     </div>
-</div>
+</section>

@@ -2,6 +2,7 @@
   --font-font-color-head: #2B2B2B;
   --ui-color-ui-04: #E4E6EC;
   --color-main-hover-light: rgba(67, 108, 242, 0.10);
+  --font-color-body: #595959;
 }
 
 /* Globals */
@@ -329,4 +330,197 @@
   font-size: var(--font-small);
   line-height: var(--font-medium);
   color: var(--font-color-head);
+}
+
+.title-banner .go-back-link:visited {
+  color: var(--font-color-inv);
+}
+
+.go-back-link {
+  color: var(--font-color-inv);
+  font-family: var(--font-family-01);
+  font-size: 12px;
+  line-height: var(--font-large);
+  padding: 10px 16px;
+  border-radius: 4px;
+}
+.go-back-link:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.location-details-container a:visited, .location-details-container .body-link:visited {
+  color: var(--font-color-link);
+}
+
+.location-heading {
+  display: flex;
+  gap: 24px;
+  align-items: center;
+  margin-top: -16px;
+}
+.location-heading .location-image {
+  height: 175px;
+  width: 175px;
+  border: 1px solid var(--ui-color-ui-04);
+}
+.location-heading h1 {
+  line-height: 48px;
+}
+.location-heading .location-details {
+  flex: 1;
+}
+.location-heading .location-sub-texts {
+  font-size: 16px;
+  line-height: 24px;
+}
+.location-heading .ins-tag {
+  cursor: default;
+  padding: 8px 16px;
+  color: var(--success);
+  background-color: var(--success-hover-light);
+  font-family: var(--font-family-02);
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 12px;
+}
+.location-heading .ins-tag[label=Closed] {
+  color: var(--error);
+  background-color: var(--error-hover-light);
+}
+
+#location-google-map {
+  width: 100%;
+  height: 300px;
+  margin-bottom: 1rem;
+}
+
+.location-links {
+  display: flex;
+}
+.location-links i {
+  display: block;
+  margin-top: 5px;
+}
+.location-links span {
+  display: block;
+  margin-left: 16px;
+  font-family: var(--font-family-02);
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 24px;
+}
+
+.opening-hours p {
+  color: var(--font-color-body);
+  font-family: var(--font-family-02);
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 24px;
+}
+.opening-hours p.day {
+  color: var(--font-color-head);
+}
+
+.social-media-links {
+  font-family: var(--font-family-01);
+  color: var(--font-color-head);
+  font-size: 24px;
+  font-weight: 700;
+  line-height: 29px;
+}
+
+.social-media-icons {
+  display: flex;
+  gap: 24px;
+}
+.social-media-icons .media-icon {
+  color: var(--font-color-head) !important;
+  font-size: 22px;
+}
+
+.dynamic-content, .dynamic-content p {
+  color: var(--font-color-head);
+  font-family: var(--font-family-02);
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 24px;
+}
+
+.location-faqs h2 {
+  color: var(--font-color-head);
+  font-family: var(--font-family-01);
+  font-size: 32px;
+  font-weight: 700;
+  line-height: 39px;
+}
+.location-faqs p {
+  color: var(--font-color-body);
+  font-family: var(--font-family-02);
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 24px;
+}
+.location-faqs ins-accordion .heading {
+  color: var(--font-color-head);
+  font-family: var(--font-family-02);
+  font-weight: 700;
+  line-height: 24px;
+}
+.location-faqs ins-accordion-item:first-child .ins-accordion-item_header {
+  padding-top: 0;
+}
+.location-faqs ins-accordion-item .ins-accordion-item.open .heading {
+  color: var(--font-color-inv);
+}
+.location-faqs .ins-accordion-item_content .inner-content {
+  padding: 16px;
+}
+.location-faqs .ins-accordion-item_content .dynamic-content p:last-child {
+  margin-bottom: 0;
+}
+
+.other-info-container {
+  padding: 40px;
+  border: 1px solid var(--ui-color-ui-04);
+  border-radius: 4px;
+}
+.other-info-container .ins-heading-wrap {
+  margin-bottom: 24px;
+}
+.other-info-container .ins-heading-wrap .label-wrap {
+  padding: 0 16px 0 0;
+}
+.other-info-container .ins-heading-wrap .label-wrap h6 {
+  color: var(--font-color-head);
+  font-family: var(--font-family-01);
+  font-size: 24px;
+  font-weight: 700;
+  line-height: 29px;
+}
+.other-info-container .ift-table .ift-cell {
+  padding: 8px 16px !important;
+}
+.other-info-container .ift-table .ift-cell:first-child {
+  width: 45%;
+}
+.other-info-container .ift-table .ift-label {
+  font-size: 16px;
+  color: var(--font-color-body);
+  font-family: var(--font-family-02);
+  font-weight: 700;
+  line-height: 24px;
+}
+.other-info-container .ift-table .ift-content {
+  font-size: 16px;
+  color: var(--font-color-body);
+  font-family: var(--font-family-02);
+  font-weight: 400;
+  line-height: 24px;
+}
+.other-info-container ins-gallery {
+  display: flex;
+  justify-content: center;
+}
+.other-info-container ins-gallery .ins-gallery {
+  max-width: 720px;
 }

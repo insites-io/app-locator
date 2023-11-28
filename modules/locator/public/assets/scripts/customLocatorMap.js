@@ -44,11 +44,13 @@ const locatorMap = document.getElementById('locator-map');
 const viewButtons = document.getElementById('view-type-buttons-wrapper');
 
 const insBaseTable = document.getElementById('locationsTable');
-insBaseTable.addEventListener('insPaginationChange', tablePaginationHandler);
-insBaseTable.pageNumber = 1;
-insBaseTable.pageSize = 10;
-insBaseTable.pageSizeOptions = [10, 20, 50];
-insBaseTable.style.display = "none";
+if (insBaseTable) {
+    insBaseTable.addEventListener('insPaginationChange', tablePaginationHandler);
+    insBaseTable.pageNumber = 1;
+    insBaseTable.pageSize = 10;
+    insBaseTable.pageSizeOptions = [10, 20, 50];
+    insBaseTable.style.display = "none";
+}
 
 var markerClusterer;
 

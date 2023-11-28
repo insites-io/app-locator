@@ -6,7 +6,8 @@ query get_locations(
     $date_to: String,
     $uuid: String
     $slug: String,
-    $system_field_uuid: String,
+    $system_field_1_uuid: String,
+    $system_field_2_uuid: String,
     $system_field_uuids: [String]
 ) {
     items: records(
@@ -79,26 +80,52 @@ query get_locations(
                 file_name
                 extension
             }
-            system_fields: related_records(
+            system_field_1: related_records(
                 table: "modules/insites_locator/location_system_field"
                 foreign_property: "uuid"
                 join_on_property: "system_field_uuids"
                 filter: {
                     properties: [
-                        { name: "system_field", value: $system_field_uuid }
+                        { name: "system_field", value: $system_field_1_uuid }
                     ]
                 }
             ) {
+                value: property(name: "value")
+            }
+            system_field_2: related_records(
+                table: "modules/insites_locator/location_system_field"
+                foreign_property: "uuid"
+                join_on_property: "system_field_uuids"
+                filter: {
+                    properties: [
+                        { name: "system_field", value: $system_field_2_uuid }
+                    ]
+                }
+            ) {
+                value: property(name: "value")
+            }
+            faqs: related_records(
+                table: "modules/insites_locator/location_faq",
+                foreign_property: "location_uuid",
+                join_on_property: "uuid",
+                sort: { id: { order: DESC } }
+            ){
                 id
                 properties
             }
-            faqs: properties(
-                select: [
-                    { name: "is_faqs_displayed", attribute_type: boolean }
-                    { name: "faqs_section_heading", attribute_type: string }
-                    { name: "faqs_section_subheading", attribute_type: string }
-                ]
-            )
+            gallery_1: related_records(
+                table: "modules/insites_core/attachment"
+                foreign_property: "uuid"
+                join_on_property: "gallery_1"
+            ) {
+                id
+                uuid: property(name: "uuid")
+                file: property_upload(name: "file") {
+                    file_name
+                    extension
+                    url
+                }
+            }
         }
     }
 }

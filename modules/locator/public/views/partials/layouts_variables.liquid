@@ -1,6 +1,11 @@
 {%- if context.params.slug2 != blank -%}
     {%- assign slug = context.params.slug2 -%}
-    {%- graphql location = "modules/locator/get_locations", slug: slug -%}
+    {%- include "modules/locator/utilities/get_system_field_names" -%}
+    {%- assign system_field = context.exports.system_fields | dig: "items" | dig: "results" | dig: "properties" | first | dig: "metadata" |  dig: "system_fields" -%}
+    {% assign system_field_1_uuid = system_field[0].uuid %}
+    {% assign system_field_2_uuid = system_field[1].uuid %}
+
+    {%- graphql location = "modules/locator/get_locations", slug: slug, system_field_1_uuid: system_field_1_uuid, system_field_2_uuid: system_field_2_uuid -%}
 
     {%- if location.items.total_entries == 0 -%}
         {%- redirect_to "/404" -%}    
@@ -26,6 +31,12 @@
 
     {%- assign faqs = result.faqs -%}
     {%- export faqs, namespace: "data" -%}
+
+    {%- assign system_field_1 = result.system_field_1 -%}
+    {%- export system_field_1, namespace: "data" -%}
+
+    {%- assign system_field_2 = result.system_field_2 -%}
+    {%- export system_field_2, namespace: "data" -%}
     
     {%- export item, namespace: "data" -%}
 {%- endif -%}
