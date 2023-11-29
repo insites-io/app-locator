@@ -14,7 +14,7 @@
 
     {% include 'modules/locator/content/layout/go-back-nav', label: "Go Back" %}
 
-    <div class="location-details grid-container">
+    <div class="location-details wrapper grid-container">
 
         {% comment %} Address {% endcomment %}
 
@@ -54,26 +54,38 @@
 
         <article>
             <div class="location-heading">
-                {%- if location_image.url -%}
-                    <img src="{{ location_image.url }}" alt="{{ item.location_name }}" class="location-image" width="175" height="175" />
-                {%- else -%}
-                    <img src="{{ 'modules/locator/images/default.png' | asset_url }}" alt="Placeholder Image" class="location-image" width="175" height="175" />
-                {%- endif -%}
+                <div class="location-heading-img">
+                    {%- if location_image.url -%}
+                        <img src="{{ location_image.url }}" alt="{{ item.location_name }}" class="location-image" width="175" height="175" />
+                    {%- else -%}
+                        <img src="{{ 'modules/locator/images/default.png' | asset_url }}" alt="Placeholder Image" class="location-image" width="175" height="175" />
+                    {%- endif -%}
+                </div>
                 <div class="location-details">
-                    {% comment %} <div class="spacer large"></div> {% endcomment %}
+                    <div class="spacer"></div>
                     <h1 class="h1-font font-heading">{{ item.location_name }}</h1>
                     <div class="spacer x-small"></div>
                     <div class="location-sub-texts">
                         {{ full_address }}
                     </div>
                     <div class="spacer x-small"></div>
-                    <ins-tag
-                        id="location-schedule"></ins-tag>
+                    <ins-tag id="location-schedule"></ins-tag>
+                    <div class="spacer"></div>
+                    <div class='enquire-btn-2'>
+                        <ins-button solid
+                            icon='icon-email-1'
+                            label='Enquire'
+                            id='enquire-{{ id }}' 
+                            data-id='{{ id }}'
+                            data-location_name="{{ item.location_name }}"
+                            onclick="insLocatorForm.methods.showEnquiryForm('{{ item.uuid }}', `{{ item.location_name }}`)">
+                        </ins-button>
+                    </div>
                 </div>
                 <ins-button solid
                     icon='icon-email-1'
                     label='Enquire'
-                    class='enquireLocationBtn'
+                    class='enquire-btn-1'
                     id='enquire-{{ id }}' 
                     data-id='{{ id }}'
                     data-location_name="{{ item.location_name }}"

@@ -1,0 +1,41 @@
+@import "./variables"
+
+// START MEDIA QUERIES
+@mixin to($media)
+    @if $media==deslg
+        @media (min-width: $deslg)
+            @content
+    @else if $media==desmd
+        @media (min-width: $desmd)
+            @content
+    @else if $media==des
+        @media (min-width: $des)
+            @content
+    @else if $media==lap
+        @media (min-width: $lap)
+            @content
+    @else if $media==tab
+        @media (min-width: $tab)
+            @content
+    @else if $media==mob
+        @media (min-width: $mob)
+            @content
+    @else if $media==smd
+        @media (min-width: $smd)
+            @content
+    @else if $media==sm
+        @media (min-width: $sm)
+            @content
+    @else if $media==xsl
+        @media (min-width: $xsl)
+            @content
+    @else if $media==xsm
+        @media (min-width: $xsm)
+            @content
+    @else if $media==xs
+        @media (min-width: $xs)
+            @content
+    @else
+        @media (max-width: $media + px)
+            @content
+//END MEDIA QUERIES

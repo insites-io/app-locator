@@ -1,0 +1,594 @@
+@import "utils/mixins"
+
+:root
+    --font-font-color-head: #2B2B2B
+    --ui-color-ui-04: #E4E6EC
+    --color-main-hover-light: rgba(67, 108, 242, 0.10)
+    --font-color-body: #595959
+    --notif-success: #048801
+
+/* Globals */
+.color-inv
+    color: var(--font-color-inv)
+.bg-main
+    background-color: var(--color-main)
+
+.locations-list-container
+    // background: linear-gradient(90deg,var(--color-ui-02) 100px, var(--color-ui-01) 100px)
+    .grid-padding-x > .cell
+        padding-left: var(--container-padding-xx-large)
+        padding-right: var(--container-padding-xx-large)
+        &.search-options-wrapper
+            padding-right: 48px
+    #ins-locator-map
+        min-height: 400px
+    #results-loader
+        display: none
+    #results-map
+        max-height: 600px
+        overflow-y: auto
+    ins-loader
+        .ins-loader-wrap--state
+            margin: 0 auto 40px
+        .ins-loader-wrap--title
+            font-weight: 600
+            font-size: 24px
+            line-height: 39px
+            color: var(--font-color-head)
+        .ins-loader-wrap--message
+            font-weight: 400
+            font-size: 14px
+            line-height: 23px
+            margin-top: 8px
+            color: var(--font-color-body)
+.search-options-wrapper
+    background-color: var(--color-ui-02)
+    position: relative
+    &::before
+        content: ""
+        width: 100px
+        height: 100%
+        position: absolute
+        top: 0
+        left: -100px
+        background: var(--color-ui-02)
+    &::after
+        content: ""
+        width: 100px
+        height: 100%
+        position: absolute
+        top: 0
+        right: -100px
+        background: var(--color-ui-02)
+    @include to(smd)
+        &::after
+            display: none
+    .ins-form-field-wrap .ins-form-field
+        padding: 11px 12px
+    .ins-form-field-wrap .ins-form-label
+        margin-bottom: 8px
+    .ins-select-wrap .ins-select-label-wrap
+        font-family: var(--font-family-01)
+        font-weight: 600
+        font-size: var(--font-small)
+        line-height: var(--font-medium)
+        color: var(--font-color-head)
+        margin-bottom: 8px
+    ins-button
+        display: block
+    button
+        width: 100%
+#view-type-buttons-wrapper
+    display: none
+    span
+        display: block
+        color: var(--font-font-color-head)
+        font-family: var(--font-family-02)
+        font-size: 16px
+        font-weight: 700
+        line-height: 24px
+        margin-right: 8px
+    .type-button
+        cursor: pointer
+        color: var(--font-font-color-body)
+        font-size: 18px
+        font-weight: 400
+        line-height: 18px
+        padding: 8px
+        &:hover,&.active
+            color: var(--color-main)
+#search-results
+    &.grid-view, &.list-view
+        #locator-map
+            display: none
+        #results-map
+            max-height: none
+            overflow-y: visible
+    &.grid-view
+        #results-list
+            display: flex $i
+            flex-wrap: wrap
+            gap: 24px
+            @include to(smd)
+                margin-right: -24px
+            li
+                flex-basis: 100%
+                margin: 0
+                @include to(smd)
+                    flex-basis: calc(50% - 24px)
+                @include to(des)
+                    flex-basis: calc(33.3333% - 24px)
+        .location-content-wrapper
+            flex-direction: column
+            height: 100%
+        .location-details
+            display: flex
+            flex-direction: column
+        .upper-row
+            .buttons
+                display: none
+        .lower-row
+            flex-direction: column
+            flex-wrap: nowrap
+        .grid-view-buttons
+            margin-top: auto
+            display: block
+            padding-top: 24px
+    .buttons
+        display: flex
+        flex-direction: column
+        gap: 16px
+        @include to(des)
+            flex-direction: row
+        ins-button button
+            margin: 0
+        button
+            width: 100%
+            @include to(des)
+                width: auto
+    &:not(.grid-view)
+        .buttons
+            display: none
+            @include to(smd)
+                display: flex
+        .grid-view-buttons
+            display: block
+            padding-top: 24px
+            @include to(smd)
+                display: none
+#results-list
+    list-style: none
+    margin: 0
+    li
+        &:not(:last-child)
+            margin-bottom: 24px
+#locationsTable
+    .pagination-wrap.full
+        padding-top: 56px
+.location-content-wrapper
+    padding: 24px
+    border-radius: 4px
+    border: 1px solid var(--ui-color-ui-04)
+    display: flex
+    gap: 24px
+    flex-direction: column
+    @include to(sm)
+        flex-direction: row
+.location-image
+    border-radius: 100%
+    height: 80px
+    width: 80px
+.location-details
+    flex: 1
+    .upper-row
+        display: flex
+        gap: 24px
+        padding: 0 0 16px
+        border-bottom: 1px solid var(--color-ui-04)
+        & > div
+            &:first-child
+                flex: 1 1 0px
+    .location-name
+        font-family: var(--font-family-01)
+        color: var(--font-color-head)
+        font-size: 24px
+        font-weight: 700
+        line-height: 29px
+    .location-sub-texts
+        font-family: var(--font-family-02)
+        color: var( --font-color-body)
+        font-size: 14px
+        font-weight: 400
+        line-height: 16px
+        &.bolder
+            font-weight: 700
+            color: var(--font-color-sub)
+    .link-buttons
+        ins-button
+            display: block
+        button
+            width: 100%
+        ins-button+ins-button button
+            margin: 0
+    ins-button+ins-button button
+        margin-left: 16px
+    .lower-row
+        display: flex
+        flex-flow: row wrap
+        gap: 24px
+        padding: 16px 0 0
+        @include to(smd)
+            margin-right: -24px
+        .sub-details
+            flex-basis: 100%
+            @include to(smd)
+                flex-basis: calc(33.3333% - 24px)
+    .sub-details
+        display: flex
+        flex-direction: column
+        gap: 4px
+.store-availability-wrapper
+    &[heading="Open"]
+        .inner-head
+            background-color: var(--success-hover-light)
+            span
+                color: var(--success)
+            &:hover
+                background-color: var(--success)
+                -webkit-transition: background-color 500ms linear
+                -ms-transition: background-color 500ms linear
+                transition: background-color 500ms linear
+        .ins-accordion-item.open>.ins-accordion-item_header>.inner-head
+            border: 1px solid transparent
+            background-color: var(--success)
+            span
+                color: var(--font-color-inv)
+    .ins-accordion-item.open>.ins-accordion-item_header>.inner-head
+        border: 1px solid transparent
+        background-color: var(--error)
+        span
+            color: var(--font-color-inv)
+    .ins-accordion-item_header
+        padding: 0
+    .inner-head
+        width: max-content
+        padding: 8px 16px
+        line-height: 12px
+        background-color: var(--error-hover-light)
+        border: 1px solid transparent
+        border-radius: 2px $i
+        &:hover
+            border: 1px solid transparent
+            background-color: var(--error)
+            -webkit-transition: background-color 500ms linear
+            -ms-transition: background-color 500ms linear
+            transition: background-color 500ms linear
+            span
+                color: var(--font-color-inv)
+        span
+            color: var(--error)
+            font-family: var(--font-family-02)
+            font-size: 12px $i
+            font-weight: 700
+            line-height: 12px
+    .ins-accordion-item_header_caret-wrap
+        display: none
+    .inner-content
+        border: none
+        padding: 8px 4px
+        display: flex
+        flex-direction: column
+        gap: 8px
+    .time-sched-wrapper
+        display: flex
+        gap: 8px
+        span
+            font-family: var(--font-family-03)
+            display: block
+            font-size: 12px
+            line-height: 14px
+.grid-view-buttons
+    display: none
+
+// MarkInfoWindow
+.gm-style
+    .gm-style-iw-c
+        width: 278px
+        padding: 24px 0 12px 24px $i
+        max-height: none $i
+        .gm-style-iw-d
+            max-height: none $i
+    .gm-ui-hover-effect
+        display: none $i
+// Advanced Filters
+#location-filters-container
+    transform: scaleY(1)
+    opacity: 1
+    transition: all .25s linear
+    transform-origin: left top
+    &.hidden
+        transform: scaleY(0)
+        opacity: 0
+    ins-checkbox .ins-radio-checkbox label
+        margin-bottom: 12px
+.filter-label
+    font-family: var(--font-family-01)
+    font-weight: 600
+    font-size: var(--font-small)
+    line-height: var(--font-medium)
+    color: var(--font-color-head)
+
+
+// Location Details
+.title-banner
+    .go-back-link
+        &:visited
+            color: var(--font-color-inv)
+.go-back-link
+    color: var(--font-color-inv)
+    font-family: var(--font-family-01)
+    font-size: 12px
+    line-height: var(--font-large)
+    padding: 10px 16px
+    border-radius: 4px
+    &:hover
+        background-color: rgba(255, 255, 255, 10%)
+.location-details-container
+    a:visited, .body-link:visited
+        color: var(--font-color-link)
+.location-heading
+    display: flex
+    flex-wrap: wrap
+    align-items: flex-start
+    margin-top: -16px
+    flex-direction: column
+    @include to(smd)
+        flex-direction: row
+        align-items: center
+        gap: 24px
+    .location-heading-img
+        position: relative
+        width: 175px
+        height: 175px
+        img
+            @include to(smd)
+                position: absolute
+                left: 0
+                top: -28px
+            @include to(mob)
+                top: -8px
+            @include to(tab)
+                top: 0
+    ins-button
+        button
+            width: 100%
+            @include to(sm)
+                width: auto
+    .location-image
+        height: 175px
+        width: 175px
+        border: 1px solid var(--ui-color-ui-04)
+    h1
+        font-size: 40px
+        line-height: 48px
+    .location-details
+        flex: 1
+    .enquire-btn-1
+        display: none
+        @include to(mob)
+            display: block
+    .enquire-btn-2
+        display: block
+        @include to(mob)
+            display: none
+    .location-sub-texts
+        font-size: 16px
+        line-height: 24px
+    .ins-tag
+        cursor: default
+        padding: 8px 16px
+        color: var(--success)
+        background-color: var(--success-hover-light)
+        font-family: var(--font-family-02)
+        font-size: 12px
+        font-weight: 700
+        line-height: 12px
+        &[label="Closed"]
+            color: var(--error)
+            background-color: var(--error-hover-light)
+#location-google-map
+    width: 100%
+    height: 300px
+    margin-bottom: 1rem
+.location-links
+    display: flex
+    i
+        display: block
+        margin-top: 5px
+    span
+        display: block
+        margin-left: 16px
+        font-family: var(--font-family-02)
+        font-size: 16px
+        font-weight: 400
+        line-height: 24px
+.opening-hours
+    p
+        color: var(--font-color-body)
+        font-family: var(--font-family-02)
+        font-size: 16px
+        font-weight: 400
+        line-height: 24px
+        &.day
+            color: var(--font-color-head)
+.social-media-links
+    font-family: var(--font-family-01)
+    color: var(--font-color-head)
+    font-size: 24px
+    font-weight: 700
+    line-height: 29px
+.social-media-icons
+    display: flex
+    gap: 24px
+    .media-icon
+        color: var(--font-color-head) $i
+        font-size: 22px
+.dynamic-content, .dynamic-content p
+    color: var(--font-color-head)
+    font-family: var(--font-family-02)
+    font-size: 16px
+    font-weight: 400
+    line-height: 24px
+.location-faqs
+    h2
+        color: var(--font-color-head)
+        font-family: var(--font-family-01)
+        font-size: 32px
+        font-weight: 700
+        line-height: 39px
+    p
+        color: var(--font-color-body)
+        font-family: var(--font-family-02)
+        font-size: 16px
+        font-weight: 400
+        line-height: 24px
+    ins-accordion 
+        .heading
+            color: var(--font-color-head)
+            font-family: var(--font-family-02)
+            font-weight: 700
+            line-height: 24px
+    ins-accordion-item
+        &:first-child
+            .ins-accordion-item_header
+                padding-top: 0
+        .ins-accordion-item.open
+            .heading
+                color: var(--font-color-inv)
+    .ins-accordion-item_content
+        .inner-content
+            padding: 16px
+        .dynamic-content
+            p
+                &:last-child
+                    margin-bottom: 0
+.other-info-container
+    padding: 40px
+    border: 1px solid var(--ui-color-ui-04)
+    border-radius: 4px
+    .ins-heading-wrap
+        margin-bottom: 24px
+        .label-wrap
+            padding: 0 16px 0 0
+            h6
+                color: var(--font-color-head)
+                font-family: var(--font-family-01)
+                font-size: 24px
+                font-weight: 700
+                line-height: 29px
+    .ift-table
+        .ift-cell
+            padding: 8px 16px $i
+            &:first-child
+                @include to(mob)
+                    width: 45%
+        .ift-label
+            font-size: 16px
+            color: var(--font-color-body)
+            font-family: var(--font-family-02)
+            font-weight: 700
+            line-height: 24px
+        .ift-content
+            font-size: 16px
+            color: var(--font-color-body)
+            font-family: var(--font-family-02)
+            font-weight: 400
+            line-height: 24px
+    ins-gallery
+        display: flex
+        justify-content: center
+        .ins-gallery
+            max-width: 720px
+            width: 100%
+
+// Enquiry Form
+#locator-form-drawer
+    .ins-drawer-wrap
+        z-index: 1000000
+        &.opened
+            .ins-content
+                left: 0 $i
+    .ins-content
+        padding: 32px
+        width: 100% $i
+        left: -100% $i
+        @include to(mob)
+            width: 720px $i
+            left: -720px $i
+    .ins-drawer-header
+        padding: 16px 0
+        width: max-content $i
+    h4
+        font-size: 24px
+        color: var(--font-color-head)
+        font-family: var(--font-family-01)
+        font-weight: 700
+        line-height: 29px
+    .ins-drawer-body
+        height: calc(100% - 61px) // 61px height of drawer label
+    #locator-enquiry-cont
+        height: 100%
+        padding-top: 24px
+    #locator-enquiry-form
+        height: 100%
+        display: flex
+        flex-direction: column
+    .ins-textarea-counter
+        font-size: 12px
+        color: var(--font-color-head)
+        font-family: var(--font-family-02)
+        font-weight: 400
+        line-height: 16px
+        margin-top: 8px
+    .form-wrapper
+        align-content: flex-start
+    .form-buttons
+        margin-top: auto
+        display: flex
+        flex-direction: column
+        gap: 16px
+        padding-bottom: 32px
+        @include to(smd)
+            flex-direction: row
+            justify-content: flex-end
+            padding-bottom: 0
+        ins-button button
+            margin: 0
+        button
+            width: 100%
+            @include to(smd)
+                width: auto
+    .ins-form-error
+        font-family: var(--font-family-03)
+        font-weight: 400
+        font-size: var(--font-x-small)
+        line-height: normal
+        color: var(--error)
+    #recaptcha-v2-wrapper
+        .ins-form-error
+            display: none
+        &[has-error="true"]
+            .ins-form-error
+                display: inline-block
+#locator-enquiry-success
+    .thank-you .thank-you-img i
+        color: var(--notif-success)
+    h2
+        font-size: 40px
+        line-height: 48px
+    p
+        font-size: 16px
+        color: var(--font-color-body)
+        font-family: var(--font-family-02)
+        font-weight: 400
+        line-height: 24px

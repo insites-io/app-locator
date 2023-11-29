@@ -113,6 +113,8 @@ api_call_notifications:
         <div class="large-12 medium-12 small-12 cell">
             <ins-textarea label="Message*" validate
                 placeholder="Message"
+                maxlength="500"
+                counter="increasing"
                 name="{{ props.message.name }}"
                 value="{{ props.message.value }}"
                 error-message="{{ props.message.validation.rules.presence.message }}">
@@ -129,10 +131,11 @@ api_call_notifications:
             <div class="spacer show-for-small-only"></div>
         </div>
     </div>
-    <div class="form-buttons text-right">
+    <div class="form-buttons text-right buttons">
         <ins-button
             outlined 
             id="enquiry-cancel-btn" 
+            type="button"
             color="blue"
             icon="icon-close-1"
             label="Cancel"
@@ -145,6 +148,5 @@ api_call_notifications:
             icon="icon-check-2"
             label="Submit">
         </ins-button>
-        <div class="spacer"></div>
     </div>
 {% endform %}
