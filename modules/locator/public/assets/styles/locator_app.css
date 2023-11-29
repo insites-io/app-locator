@@ -3,6 +3,7 @@
   --ui-color-ui-04: #E4E6EC;
   --color-main-hover-light: rgba(67, 108, 242, 0.10);
   --font-color-body: #595959;
+  --notif-success: #048801;
 }
 
 /* Globals */
@@ -523,4 +524,68 @@
 }
 .other-info-container ins-gallery .ins-gallery {
   max-width: 720px;
+}
+
+#locator-form-drawer .ins-drawer-wrap {
+  z-index: 1000000;
+}
+#locator-form-drawer .ins-content {
+  padding: 32px;
+}
+#locator-form-drawer .ins-drawer-header {
+  padding: 16px 0;
+  width: max-content !important;
+}
+#locator-form-drawer h4 {
+  font-size: 24px;
+  color: var(--font-color-head);
+  font-family: var(--font-family-01);
+  font-weight: 700;
+  line-height: 29px;
+}
+#locator-form-drawer .ins-drawer-body {
+  height: calc(100% - 61px);
+}
+#locator-form-drawer #locator-enquiry-cont {
+  height: 100%;
+  padding-top: 24px;
+}
+#locator-form-drawer #locator-enquiry-form {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+#locator-form-drawer .form-wrapper {
+  align-content: flex-start;
+}
+#locator-form-drawer .form-buttons {
+  margin-top: auto;
+}
+#locator-form-drawer .ins-form-error {
+  font-family: var(--font-family-03);
+  font-weight: 400;
+  font-size: var(--font-x-small);
+  line-height: normal;
+  color: var(--error);
+}
+#locator-form-drawer #recaptcha-v2-wrapper .ins-form-error {
+  display: none;
+}
+#locator-form-drawer #recaptcha-v2-wrapper[has-error=true] .ins-form-error {
+  display: inline-block;
+}
+
+#locator-enquiry-success .thank-you .thank-you-img i {
+  color: var(--notif-success);
+}
+#locator-enquiry-success h2 {
+  font-size: 40px;
+  line-height: 48px;
+}
+#locator-enquiry-success p {
+  font-size: 16px;
+  color: var(--font-color-body);
+  font-family: var(--font-family-02);
+  font-weight: 400;
+  line-height: 24px;
 }

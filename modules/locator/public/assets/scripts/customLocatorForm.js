@@ -6,10 +6,13 @@ var insLocatorForm = (function () {
     const contForm = document.getElementById('locator-enquiry-cont');
     const contSuccess = document.getElementById('locator-enquiry-success');
 
+    const submitBtn = document.getElementById('enquiry-submit-btn');
+    const cancelBtn = document.getElementById('enquiry-cancel-btn');
+
     const urlParams = new URLSearchParams(window.location.search);
     const phoneFields = {
         inputTel: document.getElementById('phone-number-field'),
-        mobile_phone: document.getElementById('mobile_phone'),
+        phone_number: document.getElementById('phone_number'),
         country_code: document.getElementById('country_code')
     }
 
@@ -40,17 +43,19 @@ var insLocatorForm = (function () {
             async validateForm(event) {
                 event ? event.preventDefault() : '';
                 // IF your form / instance have recaptcha enabled, uncommment captcha codes instead
-                var captcha =this.checkRecaptcha(formEl);
+                var captcha = this.checkRecaptcha(formEl);
                 let valid = await App.validation.validateForm(formEl);
                 let validPhoneField = await this.validateFormField();
                 if (valid && validPhoneField && captcha) {
-                    formEl.querySelector('ins-button').loading = true;
+                    submitBtn.loading = true;
+                    cancelBtn.disabled = true;
                     let formData = new FormData(formEl);
                     let response = await InsLocatorServices.processRequest(formEl.method, formEl.action, formData);
                     if(!response.data.error){
                         insLocatorForm.methods.showSuccessPrompt();
                     }
-                    formEl.querySelector('ins-button').loading = false;
+                    submitBtn.loading = false;
+                    cancelBtn.disabled = false;
                     //formEl.submit();
                 } else {
                     return false;
@@ -61,7 +66,7 @@ var insLocatorForm = (function () {
                 if (values.phone_number){
                     phoneFields.inputTel.hasError = false;
                     phoneFields.country_code.value = values.country_code;
-                    phoneFields.mobile_phone.value = values.phone_number;
+                    phoneFields.phone_number.value = values.phone_number;
                     return true;
                 } else {
                     phoneFields.inputTel.errorMessage = "Mobile Phone is required.";

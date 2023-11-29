@@ -7,6 +7,9 @@ spam_protection:
   recaptcha_v2:
 fields:
   properties:
+    uuid:
+        validation: 
+            presence: true
     status:
     location_uuid:
     first_name:
@@ -36,12 +39,12 @@ email_notifications:
     - modules/insites_core/insites_external_email
     - modules/insites_core/insites_internal_email
 callback_actions: >
-    {%- include 'modules/insites_core/insites_admin/insites_create_crm_on_submit',
+    {%- include 'modules/insites_core/crm/create_contact_on_submit',
         email: form.properties.email,
         first_name: form.properties.first_name,
         last_name: form.properties.last_name,
         mobile_phone_number: form.properties.phone_number,
-        phone_country_code: form.properties.phone_country_code,
+        mobile_phone_country_code: form.properties.phone_country_code,
         model_id: form.id -%}
 api_call_notifications:
     - modules/insites_core/create_crm_activity
@@ -53,7 +56,8 @@ api_call_notifications:
     html-onsubmit:"return insLocatorForm.methods.validateForm(event)" %}
 
     {%- assign props = form.fields.properties -%}
-    <div class="location-details">
+    <div class="location-hidden-details">
+        <input id="uuid" type="hidden" name="{{ props.uuid.name }}" value="{{ '' | uuid }}">
         <input id="status" type="hidden" name="{{ props.status.name }}" value="New" />
 
         <input id="location_uuid_field" type="hidden" name="{{ props.location_uuid.name }}"
@@ -65,9 +69,9 @@ api_call_notifications:
         {%- assign country_code = props.phone_country_code.value | default: "61" -%}
         <input type="hidden" id="country_code" name="{{ props.phone_country_code.name }}"
             value="{{ country_code }}" />
-        </div>
+    </div>
 
-    <div class="form-wrapper grid-x grid-padding-x">
+    <div class="form-wrapper grid-x grid-margin-x">
 
         <div class="large-6 medium-6 small-12 cell">
             <ins-input label="First Name*" validate
@@ -116,23 +120,31 @@ api_call_notifications:
         </div>
 
         
-        <div class="large-6 medium-6 small-12 cell">
+        <div class="large-12 medium-12 small-12 cell">
             {%- comment -%}IF your form / instance have recaptcha enabled, uncommment this code{%- endcomment -%}
             <div id="recaptcha-v2-wrapper" class="large-12 medium-12 small-12 cell">
                 {% spam_protection "recaptcha_v2" %}
-                <div class="ins-form-error">Please prove you are not a robot.</div>
+                <div class="ins-form-error">reCAPTCHA is required</div>
             </div>
             <div class="spacer show-for-small-only"></div>
         </div>
-        <div class="large-6 medium-6 small-12 cell text-right">
-            <ins-button solid
-                id="enquiry-submit-btn" 
-                type="submit" 
-                color="blue" 
-                label="Submit">
-            </ins-button>
-            <div class="spacer xxx-large"></div>
-            <div class="spacer xxx-large"></div>
-        </div>
+    </div>
+    <div class="form-buttons text-right">
+        <ins-button
+            outlined 
+            id="enquiry-cancel-btn" 
+            color="blue"
+            icon="icon-close-1"
+            label="Cancel"
+            onclick="insLocatorForm.methods.closeSuccessPrompt()">
+        </ins-button>
+        <ins-button solid
+            id="enquiry-submit-btn" 
+            type="submit"
+            color="blue" 
+            icon="icon-check-2"
+            label="Submit">
+        </ins-button>
+        <div class="spacer"></div>
     </div>
 {% endform %}
