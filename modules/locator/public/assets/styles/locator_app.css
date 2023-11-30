@@ -19,8 +19,10 @@
   padding-left: var(--container-padding-xx-large);
   padding-right: var(--container-padding-xx-large);
 }
-.locations-list-container .grid-padding-x > .cell.search-options-wrapper {
-  padding-right: 48px;
+@media (min-width: 640px) {
+  .locations-list-container .grid-padding-x > .cell.search-options-wrapper {
+    padding-right: 48px;
+  }
 }
 .locations-list-container #ins-locator-map {
   min-height: 400px;
@@ -55,11 +57,11 @@
 }
 .search-options-wrapper::before {
   content: "";
-  width: 100px;
+  width: 33.33333vw;
   height: 100%;
   position: absolute;
   top: 0;
-  left: -100px;
+  left: -33.33333vw;
   background: var(--color-ui-02);
 }
 .search-options-wrapper::after {

@@ -28,7 +28,6 @@
             <div class="grid-x grid-padding-x">
                 <div class="large-4 medium-4 small-12 cell search-options-wrapper">
                     <div class="spacer xxxx-large"></div>
-                    <div class="spacer"></div>
 
                     <ins-input label="Search" id="address-search"
                         {% if api_key == blank %}
@@ -65,9 +64,13 @@
                     </ins-button>
 
                     <div id="location-filters-container">
-                        <div class="spacer"></div>
+                    <div class="spacer"></div>
                         <hr>
                         <div class="spacer"></div>
+
+                        <h5 class="heading-5">Advanced Filters</h5>
+                        <div class="spacer"></div>
+
                         {%- include "modules/insites_locator/controllers/utilities/advanced_filters/get_filter_options" -%}
                         
                         {% assign filter_options = '{}' | parse_json %}

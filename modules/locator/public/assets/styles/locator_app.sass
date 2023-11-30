@@ -19,7 +19,8 @@
         padding-left: var(--container-padding-xx-large)
         padding-right: var(--container-padding-xx-large)
         &.search-options-wrapper
-            padding-right: 48px
+            @include to(smd)
+                padding-right: 48px
     #ins-locator-map
         min-height: 400px
     #results-loader
@@ -46,11 +47,11 @@
     position: relative
     &::before
         content: ""
-        width: 100px
+        width: 33.33333vw
         height: 100%
         position: absolute
         top: 0
-        left: -100px
+        left: -33.33333vw
         background: var(--color-ui-02)
     &::after
         content: ""

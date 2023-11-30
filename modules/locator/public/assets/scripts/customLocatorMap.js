@@ -177,8 +177,8 @@ function updateMarkers(list) {
     }
 
     // Scroll to map
-    window.location.hash = "";
-    window.location.hash = "search-results";
+    // window.location.hash = "";
+    // window.location.hash = "search-results";
 
     map.streetViewControl = false;
     map.setZoom(14);
