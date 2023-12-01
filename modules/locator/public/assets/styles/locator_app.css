@@ -506,6 +506,10 @@
   width: 175px;
   border: 1px solid var(--ui-color-ui-04);
 }
+.location-heading .default-location-image {
+  font-size: 12px;
+  line-height: 14px;
+}
 .location-heading h1 {
   font-size: 40px;
   line-height: 48px;

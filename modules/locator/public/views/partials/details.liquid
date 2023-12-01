@@ -121,35 +121,37 @@
     
                         {%- comment -%}This FAQ will be populated once the update to module is done{%- endcomment -%}
                         {% if item.is_faqs_displayed -%}
-                        <div class="spacer xxx-large"></div>
-                        <div class="location-faqs">
-                            <h2>FAQs</h2>
-                            <div class="spacer"></div>
-                            {%- if item.faqs_section_heading != blank -%}
-                                <p class="faq-headings">{{ item.faqs_section_heading }}</p>
+                            {%- if item.short_description or item.long_description -%}
+                                <div class="spacer xxx-large"></div>
+                            {%- endif -%}
+                            <div class="location-faqs">
+                                <h2>FAQs</h2>
                                 <div class="spacer"></div>
-                            {%- endif -%}
-    
-                            {%- if item.faqs_section_subheading != blank -%}
-                                <p class="faq-headings">{{ item.faqs_section_subheading }}</p>
-                                <div class="spacer"></div>
-                            {%- endif -%}
-    
-                            {%- if faqs.size > 0 -%}
-                                <ins-accordion>
-                                {%- for faq in faqs -%}
-                                    <ins-accordion-item 
-                                        heading="{{ faq.properties.question }}">
-                                        <div class="dynamic-content">
-                                            {{ faq.properties.answer | html_safe }}
-                                        </div>
-                                    </ins-accordion-item>
-                                {%- endfor -%}
-                                </ins-accordion>
-                            {%- else -%}
-                            <!--<div class="text-center">No FAQ's</div>-->
-                            {%- endif -%}
-                        </div>
+                                {%- if item.faqs_section_heading != blank -%}
+                                    <p class="faq-headings">{{ item.faqs_section_heading }}</p>
+                                    <div class="spacer"></div>
+                                {%- endif -%}
+        
+                                {%- if item.faqs_section_subheading != blank -%}
+                                    <p class="faq-headings">{{ item.faqs_section_subheading }}</p>
+                                    <div class="spacer"></div>
+                                {%- endif -%}
+        
+                                {%- if faqs.size > 0 -%}
+                                    <ins-accordion>
+                                    {%- for faq in faqs -%}
+                                        <ins-accordion-item 
+                                            heading="{{ faq.properties.question }}">
+                                            <div class="dynamic-content">
+                                                {{ faq.properties.answer | html_safe }}
+                                            </div>
+                                        </ins-accordion-item>
+                                    {%- endfor -%}
+                                    </ins-accordion>
+                                {%- else -%}
+                                <!--<div class="text-center">No FAQ's</div>-->
+                                {%- endif -%}
+                            </div>
                         {%- endif -%}
     
                         <div class="spacer xxx-large show-for-small-only"></div>
