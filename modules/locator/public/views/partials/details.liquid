@@ -58,7 +58,7 @@
                     {%- if location_image.url -%}
                         <img src="{{ location_image.url }}" alt="{{ item.location_name }}" class="location-image" width="175" height="175" />
                     {%- else -%}
-                        <img src="{{ 'modules/locator/images/default.png' | asset_url }}" alt="Placeholder Image" class="location-image" width="175" height="175" />
+                        <div class="location-image default-location-image">No Image Available</div>
                     {%- endif -%}
                 </div>
                 <div class="location-details">

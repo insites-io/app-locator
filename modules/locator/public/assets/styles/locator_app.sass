@@ -179,6 +179,16 @@
     border-radius: 100%
     height: 80px
     width: 80px
+.default-location-image
+    display: flex
+    justify-content: center
+    align-items: center
+    text-align: center
+    font-family: var(--font-family-02)
+    font-size: 10px
+    line-height: 12px
+    color: var(--font-color-head)
+    background-color: var(--color-ui-02)
 .location-details
     flex: 1
     .upper-row
@@ -235,10 +245,10 @@
             span
                 color: var(--success)
             &:hover
-                background-color: var(--success)
-                -webkit-transition: background-color 500ms linear
-                -ms-transition: background-color 500ms linear
-                transition: background-color 500ms linear
+                background-color: var(--success-hover-light)
+                // -webkit-transition: background-color 500ms linear
+                // -ms-transition: background-color 500ms linear
+                // transition: background-color 500ms linear
         .ins-accordion-item.open>.ins-accordion-item_header>.inner-head
             border: 1px solid transparent
             background-color: var(--success)
@@ -252,20 +262,20 @@
     .ins-accordion-item_header
         padding: 0
     .inner-head
+        display: flex
+        align-items: center
         width: max-content
-        padding: 8px 16px
-        line-height: 12px
+        padding: 4px 16px
+        line-height: 14px
         background-color: var(--error-hover-light)
         border: 1px solid transparent
         border-radius: 2px $i
         &:hover
             border: 1px solid transparent
-            background-color: var(--error)
-            -webkit-transition: background-color 500ms linear
-            -ms-transition: background-color 500ms linear
-            transition: background-color 500ms linear
-            span
-                color: var(--font-color-inv)
+            background-color: var(--error-hover-light)
+            // -webkit-transition: background-color 500ms linear
+            // -ms-transition: background-color 500ms linear
+            // transition: background-color 500ms linear
         span
             color: var(--error)
             font-family: var(--font-family-02)
@@ -369,6 +379,9 @@
         height: 175px
         width: 175px
         border: 1px solid var(--ui-color-ui-04)
+    .default-location-image
+        font-size: 14px
+        line-height: 23px
     h1
         font-size: 40px
         line-height: 48px

@@ -205,11 +205,12 @@ function listLocation(location, index) {
     let item = document.createElement('li');
         item.innerHTML = `
             <div class='location-content-wrapper'>
-                <img class="location-image" width="80" height="80" src="${location.location_image.url 
-                    ? location.location_image.url 
-                    : `${domain}assets/modules/locator/images/default.png`}"
-                    alt="${location.properties.location_name}"
-                    title="${location.properties.location_name}" />
+                ${ location.location_image.url ?
+                    `<img class="location-image" width="80" height="80" src="${location.location_image.url}"
+                        alt="${location.properties.location_name}"
+                        title="${location.properties.location_name}" />` : 
+                    `<div class="location-image default-location-image">No Image Available</div>`
+                }
                 <div class='location-details'>
                     <div class="upper-row">
                         <div>
