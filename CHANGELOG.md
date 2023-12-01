@@ -1,3 +1,3 @@
-Release Date: --- --, 2023
+Release Date: December 1, 2023
 
 * Initial release
