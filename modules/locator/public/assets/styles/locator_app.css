@@ -254,7 +254,7 @@
   font-family: var(--font-family-02);
   font-size: 10px;
   line-height: 12px;
-  color: var(--font-color-head);
+  color: var(--font-color-body);
   background-color: var(--color-ui-02);
 }
 
@@ -335,14 +335,14 @@
   background-color: var(--success-hover-light);
 }
 .store-availability-wrapper[heading=Open] .ins-accordion-item.open > .ins-accordion-item_header > .inner-head {
-  border: 1px solid transparent;
+  border: none;
   background-color: var(--success);
 }
 .store-availability-wrapper[heading=Open] .ins-accordion-item.open > .ins-accordion-item_header > .inner-head span {
   color: var(--font-color-inv);
 }
 .store-availability-wrapper .ins-accordion-item.open > .ins-accordion-item_header > .inner-head {
-  border: 1px solid transparent;
+  border: none;
   background-color: var(--error);
 }
 .store-availability-wrapper .ins-accordion-item.open > .ins-accordion-item_header > .inner-head span {
@@ -358,11 +358,11 @@
   padding: 4px 16px;
   line-height: 14px;
   background-color: var(--error-hover-light);
-  border: 1px solid transparent;
+  border: none;
   border-radius: 2px !important;
 }
 .store-availability-wrapper .inner-head:hover {
-  border: 1px solid transparent;
+  border: none;
   background-color: var(--error-hover-light);
 }
 .store-availability-wrapper .inner-head span {
@@ -370,7 +370,6 @@
   font-family: var(--font-family-02);
   font-size: 12px !important;
   font-weight: 700;
-  line-height: 12px;
 }
 .store-availability-wrapper .ins-accordion-item_header_caret-wrap {
   display: none;
