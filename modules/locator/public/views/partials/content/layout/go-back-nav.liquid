@@ -14,9 +14,13 @@
     <div class="wrapper">
         <div class="grid-container">
             <div class="spacer xxx-large"></div>
-            <a class="button-default font-color-inv go-back-link" href="/{{ url }}">
-                <i class="icon-angle-left"></i>&nbsp;&nbsp; {{ label }}
-            </a>
+                <ins-button
+                    label="{{ label }}"
+                    icon="icon-angle-left"
+                    color="blue"
+                    solid
+                    onclick="location.href=`/{{ url }}`">
+                </ins-button>
             <div class="spacer xxx-large"></div>
         </div>
     </div>

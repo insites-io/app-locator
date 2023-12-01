@@ -14,284 +14,288 @@
 
     {% include 'modules/locator/content/layout/go-back-nav', label: "Go Back" %}
 
-    <div class="location-details wrapper grid-container">
-
-        {% comment %} Address {% endcomment %}
-
-        {%- liquid
-            assign full_address = ""
-            if item.address_1 and item.address_1 != ''
-                assign full_address = item.address_1 | append: ' '
-            endif
-            if item.address_2 and item.address_2 != ''
-                assign full_address = full_address | append: item.address_2 | append: ' '
-            endif
-            if item.address_3 and item.address_3 != ''
-                assign full_address = full_address | append: item.address_3 | append: ' '
-            endif
-            if item.city and item.city != ''
-                assign full_address = full_address | append: item.city | append: ' '
-            endif
-            if item.district and item.district != ''
-                assign full_address = full_address | append: item.district | append: ' '
-            endif
-            if item.county and item.county != ''
-                assign full_address = full_address | append: item.county | append: ' '
-            endif
-            if item.state and item.state != ''
-                assign full_address = full_address | append: item.state | append: ' '
-            endif
-            if item.country and item.country != ''
-                assign full_address = full_address | append: item.country | append: ' '
-            endif
-            if item.post_code and item.post_code != ''
-                assign full_address = full_address | append: item.post_code
-            endif    
-        -%}        
-
-        {% comment %} Schedule / Store Hours {% endcomment %}
-        {% function schedule = 'modules/locator/functions/build_schedule', item: item %}
-
-        <article>
-            <div class="location-heading">
-                <div class="location-heading-img">
-                    {%- if location_image.url -%}
-                        <img src="{{ location_image.url }}" alt="{{ item.location_name }}" class="location-image" width="175" height="175" />
-                    {%- else -%}
-                        <div class="location-image default-location-image">No Image Available</div>
-                    {%- endif -%}
-                </div>
-                <div class="location-details">
-                    <div class="spacer"></div>
-                    <h1 class="h1-font font-heading">{{ item.location_name }}</h1>
-                    <div class="spacer x-small"></div>
-                    <div class="location-sub-texts">
-                        {{ full_address }}
-                    </div>
-                    <div class="spacer x-small"></div>
-                    <ins-tag id="location-schedule"></ins-tag>
-                    <div class="spacer"></div>
-                    <div class='enquire-btn-2'>
-                        <ins-button solid
-                            icon='icon-email-1'
-                            label='Enquire'
-                            id='enquire-{{ id }}' 
-                            data-id='{{ id }}'
-                            data-location_name="{{ item.location_name }}"
-                            onclick="insLocatorForm.methods.showEnquiryForm('{{ item.uuid }}', `{{ item.location_name }}`)">
-                        </ins-button>
-                    </div>
-                </div>
-                <ins-button solid
-                    icon='icon-email-1'
-                    label='Enquire'
-                    class='enquire-btn-1'
-                    id='enquire-{{ id }}' 
-                    data-id='{{ id }}'
-                    data-location_name="{{ item.location_name }}"
-                    onclick="insLocatorForm.methods.showEnquiryForm('{{ item.uuid }}', `{{ item.location_name }}`)">
-                </ins-button>
-            </div>
-
-            <div class="spacer xxxx-large"></div>
-
-            <div class="grid-x grid-padding-x">
-                <div class="location-content large-7 medium-6 small-12 cell">
-                    <div class="dynamic-content">
-                        {{ item.short_description }}
-                    </div>
-
-                    {%- if item.image_1.path -%}
-                        <div class="spacer x-large"></div>
-                        {%- assign image_1 = "" | asset_url 
-                            | replace: "assets", "property_uploads" 
-                            | append: item.image_1.path -%}
-                        <img src="{{ image_1 }}" alt="{{ item.location_name }}" />
-                        <div class="spacer x-large"></div>
-                    {%- else -%}
-                    <div class="spacer"></div>
-                    {%- endif -%}
-
-                    <div class="dynamic-content">
-                        {{ item.long_description | html_safe}}
-                    </div>
-
-                    {%- comment -%}This FAQ will be populated once the update to module is done{%- endcomment -%}
-                    {% if item.is_faqs_displayed -%}
-                    <div class="spacer xxx-large"></div>
-                    <div class="location-faqs">
-                        <h2>FAQs</h2>
-                        <div class="spacer"></div>
-                        {%- if item.faqs_section_heading != blank -%}
-                            <p class="faq-headings">{{ item.faqs_section_heading }}</p>
-                            <div class="spacer"></div>
-                        {%- endif -%}
-
-                        {%- if item.faqs_section_subheading != blank -%}
-                            <p class="faq-headings">{{ item.faqs_section_subheading }}</p>
-                            <div class="spacer"></div>
-                        {%- endif -%}
-
-                        {%- if faqs.size > 0 -%}
-                            <ins-accordion>
-                            {%- for faq in faqs -%}
-                                <ins-accordion-item 
-                                    heading="{{ faq.properties.question }}">
-                                    <div class="dynamic-content">
-                                        {{ faq.properties.answer | html_safe }}
-                                    </div>
-                                </ins-accordion-item>
-                            {%- endfor -%}
-                            </ins-accordion>
+    <div class="wrapper">
+        <div class="location-details grid-container">
+    
+            {% comment %} Address {% endcomment %}
+    
+            {%- liquid
+                assign full_address = ""
+                if item.address_1 and item.address_1 != ''
+                    assign full_address = item.address_1 | append: ' '
+                endif
+                if item.address_2 and item.address_2 != ''
+                    assign full_address = full_address | append: item.address_2 | append: ' '
+                endif
+                if item.address_3 and item.address_3 != ''
+                    assign full_address = full_address | append: item.address_3 | append: ' '
+                endif
+                if item.city and item.city != ''
+                    assign full_address = full_address | append: item.city | append: ' '
+                endif
+                if item.district and item.district != ''
+                    assign full_address = full_address | append: item.district | append: ' '
+                endif
+                if item.county and item.county != ''
+                    assign full_address = full_address | append: item.county | append: ' '
+                endif
+                if item.state and item.state != ''
+                    assign full_address = full_address | append: item.state | append: ' '
+                endif
+                if item.country and item.country != ''
+                    assign full_address = full_address | append: item.country | append: ' '
+                endif
+                if item.post_code and item.post_code != ''
+                    assign full_address = full_address | append: item.post_code
+                endif    
+            -%}        
+    
+            {% comment %} Schedule / Store Hours {% endcomment %}
+            {% function schedule = 'modules/locator/functions/build_schedule', item: item %}
+    
+            <article>
+                <div class="location-heading">
+                    <div class="location-heading-img">
+                        {%- if location_image.url -%}
+                            <img src="{{ location_image.url }}" alt="{{ item.location_name }}" class="location-image" width="175" height="175" />
                         {%- else -%}
-                        <!--<div class="text-center">No FAQ's</div>-->
+                            <div class="location-image default-location-image">No Image Available</div>
                         {%- endif -%}
                     </div>
-                    {%- endif -%}
-
-                    <div class="spacer xxx-large show-for-small-only"></div>
-
-                </div>
-
-                <div class="location-contact-details large-offset-1 large-4 medium-5 medium-offset-1 small-12 cell">
-                    <div id="location-google-map" class="google-map"></div>
-
-                    <a href="" target="_blank" 
-                        onclick="mapsSelector()" 
-                        class="location-links"
-                        data-test="contact-us-get-directions">
-                        <i class="icon-location-arrow"></i>
-                        <span>Get Directions</span>
-                    </a>
-                    <script>
-                        function mapsSelector() {
-                            if /* if we're on iOS, open in Apple Maps */
-                                ((navigator.platform.indexOf("iPhone") != -1) || 
-                                (navigator.platform.indexOf("iPad") != -1) || 
-                                (navigator.platform.indexOf("iPod") != -1))
-                                window.open("maps://www.google.com/maps/place/{{ full_address | url_encode }}");
-                            else /* else use Google */
-                                window.open("https://www.google.com/maps/place/{{ full_address | url_encode }}");
-                        }
-                    </script>
-
-                    <div class="spacer x-small"></div>
-                    <p id="full-address" class="location-links">
-                        <i class="icon-map"></i> <span class="location-label">{{ full_address }}</span>
-                    </p>    
-                    <p id="geo-json" class="hide">{{ item.geojson | json }}</p>
-
-                    {%- comment -%}
-                        IF the phone number is a '1800', or no country code, etc.. just remove regex 
-                        Data needs to be standard. If it will contain the country code, or not.
-                    {%- endcomment -%}
-                    {%- if item.phone_number -%}
-                    <div class="spacer x-small"></div>
-                    <p>
-                        <a href="tel:+{{ item.phone_country_code }}{{ item.phone_number | replace: ' ', '' }}" class="location-links">
-                            <i class="icon-phone1"></i>
-                            <span class="location-label">+{{ item.phone_country_code }} {{ item.phone_number }}</span>
-                        </a>
-                    </p>
-                    {%- endif -%}
-
-                    {%- if item.email -%}
-                    <div class="spacer x-small"></div>
-                    <p>
-                        <a href="mailto:{{ item.email }}" class="location-links"> 
-                            <i class="icon-mail1"></i>
-                            <span class="location-label">{{ item.email }}</span>
-                        </a>
-                    </p>
-                    {%- endif -%}  
-
-                    <div class="spacer xxx-large"></div>
-                    <h3 class="font-color-sub">Opening Hours</h3>
-                    <div class="spacer large"></div>
-
-                    {%- assign day = "now" | date: "%A" -%}
-                    <div class="opening-hours grid-x grid-padding-x">
-                        <div class="large-3 medium-4 small-4 cell spacer x-small"><p class="day">Sunday:</p></div>
-                        <div class="large-6 large-offset-1 medium-8 medium-offset-0 small-7 small-offset-1 cell spacer x-small"><p>{{ schedule['sunday'].time }}</p></div>
-
-                        <div class="large-3 medium-4 small-4 cell spacer x-small"><p class="day">Monday:</p></div>
-                        <div class="large-6 large-offset-1 medium-8 medium-offset-0 small-7 small-offset-1 cell spacer x-small"><p>{{ schedule['monday'].time }}</p></div>
-
-                        <div class="large-3 medium-4 small-4 cell spacer x-small"><p class="day">Tuesday:</p></div>
-                        <div class="large-6 large-offset-1 medium-8 medium-offset-0 small-7 small-offset-1 cell spacer x-small"><p>{{ schedule['tuesday'].time }}</p></div>
-
-                        <div class="large-3 medium-4 small-4 cell spacer x-small"><p class="day">Wednesday:</p></div>
-                        <div class="large-6 large-offset-1 medium-8 medium-offset-0 small-7 small-offset-1 cell spacer x-small"><p>{{ schedule['wednesday'].time }}</p></div>
-
-                        <div class="large-3 medium-4 small-4 cell spacer x-small"><p class="day">Thursday:</p></div>
-                        <div class="large-6 large-offset-1 medium-8 medium-offset-0 small-7 small-offset-1 cell spacer x-small"><p>{{ schedule['thursday'].time }}</p></div>
-
-                        <div class="large-3 medium-4 small-4 cell spacer x-small"><p class="day">Friday:</p></div>
-                        <div class="large-6 large-offset-1 medium-8 medium-offset-0 small-7 small-offset-1 cell spacer x-small"><p>{{ schedule['friday'].time }}</p></div>
-
-                        <div class="large-3 medium-4 small-4 cell spacer x-small"><p class="day">Saturday:</p></div>
-                        <div class="large-6 large-offset-1 medium-8 medium-offset-0 small-7 small-offset-1 cell spacer x-small"><p>{{ schedule['saturday'].time }}</p></div>
+                    <div class="location-details">
+                        <div class="spacer"></div>
+                        <h1 class="h1-font font-heading">{{ item.location_name }}</h1>
+                        <div class="spacer x-small"></div>
+                        <div class="location-sub-texts">
+                            {{ full_address }}
+                        </div>
+                        <div class="spacer x-small"></div>
+                        <ins-tag id="location-schedule"></ins-tag>
+                        <div class="spacer"></div>
+                        <div class='enquire-btn-2'>
+                            <ins-button solid
+                                icon='icon-email-1'
+                                label='Enquire'
+                                id='enquire-{{ id }}' 
+                                data-id='{{ id }}'
+                                data-location_name="{{ item.location_name }}"
+                                onclick="insLocatorForm.methods.showEnquiryForm('{{ item.uuid }}', `{{ item.location_name }}`)">
+                            </ins-button>
+                        </div>
                     </div>
-
-                    {%- if item.facebook_link or item.twitter_link or item.linkedin_link -%}
-                        <div class="spacer xxx-large"></div>
-                        <div class="social-media-links">
-                            <span class="grid-x font-color-sub">
-                                Follow Us
-                            </span>
-                            <div class="spacer large"></div>
-                            <div class="social-media-icons">
-                                {%- if item.facebook_link -%} 
-                                    <a href="{{ item.facebook_link }}" target="_blank" class="media-icon"> 
-                                        <i class="icon-facebook"></i>
-                                    </a>
-                                {%- endif -%}
-                                {%- if item.twitter_link -%} 
-                                    <a href="{{ item.twitter_link }}" target="_blank" class="media-icon"> 
-                                        <i class="icon-twitter"></i>
-                                    </a>
-                                {%- endif -%}
-                                {%- if item.linkedin_link -%} 
-                                    <a href="{{ item.linkedin_link }}" target="_blank" class="media-icon"> 
-                                        <i class="icon-linkedin"></i>
-                                    </a>
-                                {%- endif -%}
+                    <ins-button solid
+                        icon='icon-email-1'
+                        label='Enquire'
+                        class='enquire-btn-1'
+                        id='enquire-{{ id }}' 
+                        data-id='{{ id }}'
+                        data-location_name="{{ item.location_name }}"
+                        onclick="insLocatorForm.methods.showEnquiryForm('{{ item.uuid }}', `{{ item.location_name }}`)">
+                    </ins-button>
+                </div>
+    
+                <div class="spacer xxxx-large"></div>
+    
+                <div class="grid-x grid-padding-x">
+                    <div class="location-content large-7 medium-6 small-12 cell">
+                        {%- if item.short_description -%}
+                            <div class="dynamic-content">
+                                {{ item.short_description }}
                             </div>
+                        {%- endif -%}
+    
+                        {%- if item.image_1.path -%}
+                            <div class="spacer x-large"></div>
+                            {%- assign image_1 = "" | asset_url 
+                                | replace: "assets", "property_uploads" 
+                                | append: item.image_1.path -%}
+                            <img src="{{ image_1 }}" alt="{{ item.location_name }}" />
+                            <div class="spacer x-large"></div>
+                        {%- endif -%}
+                        
+                        {%- if item.long_description -%}
+                            <div class="dynamic-content">
+                                {{ item.long_description | html_safe}}
+                            </div>
+                        {%- endif -%}
+    
+                        {%- comment -%}This FAQ will be populated once the update to module is done{%- endcomment -%}
+                        {% if item.is_faqs_displayed -%}
+                        <div class="spacer xxx-large"></div>
+                        <div class="location-faqs">
+                            <h2>FAQs</h2>
+                            <div class="spacer"></div>
+                            {%- if item.faqs_section_heading != blank -%}
+                                <p class="faq-headings">{{ item.faqs_section_heading }}</p>
+                                <div class="spacer"></div>
+                            {%- endif -%}
+    
+                            {%- if item.faqs_section_subheading != blank -%}
+                                <p class="faq-headings">{{ item.faqs_section_subheading }}</p>
+                                <div class="spacer"></div>
+                            {%- endif -%}
+    
+                            {%- if faqs.size > 0 -%}
+                                <ins-accordion>
+                                {%- for faq in faqs -%}
+                                    <ins-accordion-item 
+                                        heading="{{ faq.properties.question }}">
+                                        <div class="dynamic-content">
+                                            {{ faq.properties.answer | html_safe }}
+                                        </div>
+                                    </ins-accordion-item>
+                                {%- endfor -%}
+                                </ins-accordion>
+                            {%- else -%}
+                            <!--<div class="text-center">No FAQ's</div>-->
+                            {%- endif -%}
+                        </div>
+                        {%- endif -%}
+    
+                        <div class="spacer xxx-large show-for-small-only"></div>
+    
+                    </div>
+    
+                    <div class="location-contact-details large-offset-1 large-4 medium-5 medium-offset-1 small-12 cell">
+                        <div id="location-google-map" class="google-map"></div>
+    
+                        <a href="" target="_blank" 
+                            onclick="mapsSelector()" 
+                            class="location-links"
+                            data-test="contact-us-get-directions">
+                            <i class="icon-location-arrow"></i>
+                            <span>Get Directions</span>
+                        </a>
+                        <script>
+                            function mapsSelector() {
+                                if /* if we're on iOS, open in Apple Maps */
+                                    ((navigator.platform.indexOf("iPhone") != -1) || 
+                                    (navigator.platform.indexOf("iPad") != -1) || 
+                                    (navigator.platform.indexOf("iPod") != -1))
+                                    window.open("maps://www.google.com/maps/place/{{ full_address | url_encode }}");
+                                else /* else use Google */
+                                    window.open("https://www.google.com/maps/place/{{ full_address | url_encode }}");
+                            }
+                        </script>
+    
+                        <div class="spacer x-small"></div>
+                        <p id="full-address" class="location-links">
+                            <i class="icon-map"></i> <span class="location-label">{{ full_address }}</span>
+                        </p>    
+                        <p id="geo-json" class="hide">{{ item.geojson | json }}</p>
+    
+                        {%- comment -%}
+                            IF the phone number is a '1800', or no country code, etc.. just remove regex 
+                            Data needs to be standard. If it will contain the country code, or not.
+                        {%- endcomment -%}
+                        {%- if item.phone_number -%}
+                        <div class="spacer x-small"></div>
+                        <p>
+                            <a href="tel:+{{ item.phone_country_code }}{{ item.phone_number | replace: ' ', '' }}" class="location-links">
+                                <i class="icon-phone1"></i>
+                                <span class="location-label">+{{ item.phone_country_code }} {{ item.phone_number }}</span>
+                            </a>
+                        </p>
+                        {%- endif -%}
+    
+                        {%- if item.email -%}
+                        <div class="spacer x-small"></div>
+                        <p>
+                            <a href="mailto:{{ item.email }}" class="location-links"> 
+                                <i class="icon-mail1"></i>
+                                <span class="location-label">{{ item.email }}</span>
+                            </a>
+                        </p>
+                        {%- endif -%}  
+    
+                        <div class="spacer xxx-large"></div>
+                        <h3 class="font-color-sub">Opening Hours</h3>
+                        <div class="spacer large"></div>
+    
+                        {%- assign day = "now" | date: "%A" -%}
+                        <div class="opening-hours grid-x grid-padding-x">
+                            <div class="large-3 medium-4 small-4 cell spacer x-small"><p class="day">Sunday:</p></div>
+                            <div class="large-6 large-offset-1 medium-8 medium-offset-0 small-7 small-offset-1 cell spacer x-small"><p>{{ schedule['sunday'].time }}</p></div>
+    
+                            <div class="large-3 medium-4 small-4 cell spacer x-small"><p class="day">Monday:</p></div>
+                            <div class="large-6 large-offset-1 medium-8 medium-offset-0 small-7 small-offset-1 cell spacer x-small"><p>{{ schedule['monday'].time }}</p></div>
+    
+                            <div class="large-3 medium-4 small-4 cell spacer x-small"><p class="day">Tuesday:</p></div>
+                            <div class="large-6 large-offset-1 medium-8 medium-offset-0 small-7 small-offset-1 cell spacer x-small"><p>{{ schedule['tuesday'].time }}</p></div>
+    
+                            <div class="large-3 medium-4 small-4 cell spacer x-small"><p class="day">Wednesday:</p></div>
+                            <div class="large-6 large-offset-1 medium-8 medium-offset-0 small-7 small-offset-1 cell spacer x-small"><p>{{ schedule['wednesday'].time }}</p></div>
+    
+                            <div class="large-3 medium-4 small-4 cell spacer x-small"><p class="day">Thursday:</p></div>
+                            <div class="large-6 large-offset-1 medium-8 medium-offset-0 small-7 small-offset-1 cell spacer x-small"><p>{{ schedule['thursday'].time }}</p></div>
+    
+                            <div class="large-3 medium-4 small-4 cell spacer x-small"><p class="day">Friday:</p></div>
+                            <div class="large-6 large-offset-1 medium-8 medium-offset-0 small-7 small-offset-1 cell spacer x-small"><p>{{ schedule['friday'].time }}</p></div>
+    
+                            <div class="large-3 medium-4 small-4 cell spacer x-small"><p class="day">Saturday:</p></div>
+                            <div class="large-6 large-offset-1 medium-8 medium-offset-0 small-7 small-offset-1 cell spacer x-small"><p>{{ schedule['saturday'].time }}</p></div>
+                        </div>
+    
+                        {%- if item.facebook_link or item.twitter_link or item.linkedin_link -%}
+                            <div class="spacer xxx-large"></div>
+                            <div class="social-media-links">
+                                <span class="grid-x font-color-sub">
+                                    Follow Us
+                                </span>
+                                <div class="spacer large"></div>
+                                <div class="social-media-icons">
+                                    {%- if item.facebook_link -%} 
+                                        <a href="{{ item.facebook_link }}" target="_blank" class="media-icon"> 
+                                            <i class="icon-facebook"></i>
+                                        </a>
+                                    {%- endif -%}
+                                    {%- if item.twitter_link -%} 
+                                        <a href="{{ item.twitter_link }}" target="_blank" class="media-icon"> 
+                                            <i class="icon-twitter"></i>
+                                        </a>
+                                    {%- endif -%}
+                                    {%- if item.linkedin_link -%} 
+                                        <a href="{{ item.linkedin_link }}" target="_blank" class="media-icon"> 
+                                            <i class="icon-linkedin"></i>
+                                        </a>
+                                    {%- endif -%}
+                                </div>
+                            </div>
+                        {%- endif -%}
+                    </div>
+                </div>
+    
+                <div class="spacer xxxx-large"></div>
+    
+                <div class="other-info-container">
+                    <ins-heading label="Other Info"></ins-heading>
+                    <ins-info-table 
+                        id="other-info-table" 
+                        no-wrap
+                        text-overflow="no-wrap">
+                    </ins-info-table>
+    
+                    {%- if gallery_1.size > 0 -%}
+                        <div class="spacer xxx-large"></div>
+                        <div class="locator-gallery">
+                            <ins-heading label="Store Photos"></ins-heading>
+                            <div class="spacer large"></div>
+                            <ins-gallery 
+                                thumbnail-layout="slider">
+                                {%- for item in gallery_1 -%}
+                                <ins-gallery-image
+                                    thumbnail="{{ item.file.url }}"
+                                    image="{{ item.file.url }}">
+                                </ins-gallery-image>
+                                {%- endfor -%}
+                            </ins-gallery>
                         </div>
                     {%- endif -%}
                 </div>
-            </div>
-
+            </article>
+    
             <div class="spacer xxxx-large"></div>
-
-            <div class="other-info-container">
-                <ins-heading label="Other Info"></ins-heading>
-                <ins-info-table 
-                    id="other-info-table" 
-                    no-wrap
-                    text-overflow="no-wrap">
-                </ins-info-table>
-
-                {%- if gallery_1.size > 0 -%}
-                    <div class="spacer xxx-large"></div>
-                    <div class="locator-gallery">
-                        <ins-heading label="Store Photos"></ins-heading>
-                        <div class="spacer large"></div>
-                        <ins-gallery 
-                            thumbnail-layout="slider">
-                            {%- for item in gallery_1 -%}
-                            <ins-gallery-image
-                                thumbnail="{{ item.file.url }}"
-                                image="{{ item.file.url }}">
-                            </ins-gallery-image>
-                            {%- endfor -%}
-                        </ins-gallery>
-                    </div>
-                {%- endif -%}
-            </div>
-        </article>
-
-        <div class="spacer section"></div>
+        </div>
     </div>
 
     <!-- Insites Locator UI Dependencies -->
