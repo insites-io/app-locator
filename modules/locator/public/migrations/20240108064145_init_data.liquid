@@ -1,0 +1,16 @@
+{% graphql data = "modules/locator/menu/get_menu_item", page: 1, size: 1, slug: "locations" %}
+
+{%- if data.items and data.items.total_entries == 0 -%}
+    {% log " === INITIALIZING: START seed data ===" %}
+
+    {%- graphql create_menu = "modules/locator/menu/add_menu_item"
+        label: "Locations",
+        order: 4,
+        slug: "locations",
+        show_in_menu: true
+    -%}
+
+    {% log "=== FINISHED: Migration Seed Data ===" %}
+{%- else -%}
+    {% log data, type: "Locations menu already added." %}
+{%- endif -%}

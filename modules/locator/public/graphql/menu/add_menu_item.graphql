@@ -1,0 +1,21 @@
+mutation add_menu_item(
+    $label: String,
+    $order: Int,
+    $slug: String,
+    $show_in_menu: Boolean
+) {
+    items: record_create(
+        record: {
+            table: "modules/website/menu",
+            properties: [
+                { name: "label", value: $label },
+                { name: "order", value_int: $order },
+                { name: "slug", value: $slug },
+                { name: "show_in_menu", value_boolean: $show_in_menu }
+            ]
+        }
+    ) {
+        id
+        properties
+    }
+}

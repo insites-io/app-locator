@@ -1,0 +1,26 @@
+query get_menu_item (
+    $slug: String,
+    $page: Int = 1,
+    $size: Int = 10 
+) {
+    items: records(
+        per_page: $size
+        page: $page
+        filter:{
+            deleted_at: { exists: false }
+            table: { value: "modules/website/menu" }
+            properties: [
+                { name: "slug", value: $slug }
+            ]
+        }
+    ) {
+        total_entries
+        total_pages
+        has_next_page
+        has_previous_page
+        results { 
+            id
+            properties
+        }
+    }
+}
