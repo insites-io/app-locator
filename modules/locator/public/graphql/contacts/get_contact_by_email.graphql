@@ -1,0 +1,15 @@
+query get_contact_by_email($email: String!) {
+  items: users(
+    per_page: 1,
+    page: 1,
+    filter: {
+      email: { value: $email }
+    }
+  ) {
+    results {
+      id
+      external_id
+      email
+    }
+  }
+}

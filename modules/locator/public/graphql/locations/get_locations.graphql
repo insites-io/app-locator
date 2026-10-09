@@ -114,7 +114,7 @@ query get_locations(
                 properties
             }
             gallery_1: related_records(
-                table: "modules/insites_core/attachment"
+                table: "modules/insites_crm/attachment"
                 foreign_property: "uuid"
                 join_on_property: "gallery_1"
             ) {

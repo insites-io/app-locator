@@ -36,18 +36,40 @@ fields:
             presence:
                 message: Message is a required field
 email_notifications:
-    - modules/insites_core/insites_external_email
-    - modules/insites_core/insites_internal_email
-callback_actions: >
-    {%- include 'modules/insites_core/crm/create_contact_on_submit',
+    - modules/insites_crm/insites_external_email
+    - modules/insites_crm/insites_internal_email
+callback_actions: |-
+    {%- include 'modules/insites_crm/crm/create_contact_on_submit',
         email: form.properties.email,
         first_name: form.properties.first_name,
         last_name: form.properties.last_name,
         mobile_phone_number: form.properties.phone_number,
         mobile_phone_country_code: form.properties.phone_country_code,
-        model_id: form.id -%}
-api_call_notifications:
-    - modules/insites_core/create_crm_activity
+        id: form.id -%}
+
+    {%- comment -%}
+      Log the enquiry on the Contact's CRM activity feed. Core v6 has no
+      create_crm_activity notification, so call CRM's activities controller.
+      related_type is passed alongside feature_type because the controller
+      reads it to link the activity to the contact.
+    {%- endcomment -%}
+    {%- graphql contact = 'modules/locator/contacts/get_contact_by_email', email: form.properties.email -%}
+    {%- assign contact_uuid = contact.items.results[0].external_id -%}
+    {%- if contact_uuid != blank -%}
+      {%- capture notes -%}Location: {{ form.properties.location_uuid }}
+    Message: {{ form.properties.message }}{%- endcapture -%}
+      {%- assign subject = 'Locator enquiry - ID: ' | append: form.id -%}
+      {%- assign start_date_time = 'now' | date: '%Y-%m-%dT%H:%M:%S%z' -%}
+      {%- assign activity_params = '{}' | parse_json -%}
+      {%- assign activity_params = activity_params | add_hash_key: 'type', 'other' -%}
+      {%- assign activity_params = activity_params | add_hash_key: 'subject', subject -%}
+      {%- assign activity_params = activity_params | add_hash_key: 'notes', notes -%}
+      {%- assign activity_params = activity_params | add_hash_key: 'start_date_time', start_date_time -%}
+      {%- assign activity_params = activity_params | add_hash_key: 'feature.uuid', contact_uuid -%}
+      {%- assign activity_params = activity_params | add_hash_key: 'feature_type', 'contact' -%}
+      {%- assign activity_params = activity_params | add_hash_key: 'related_type', 'contact' -%}
+      {%- function activity = 'crm/controller/activities/create', params: activity_params -%}
+    {%- endif -%}
 ---
 
 {% form 
